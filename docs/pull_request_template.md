@@ -1,11 +1,14 @@
-# Issue 
-[replace issue with the issue name/number ie: F-01]
+# Task Name 
 
-## Changes / Improvememts 
-[Please include a detailed description of what your code will do]
+# Details 
+Add all details here 
 
-## Build Status
-[link to CI build here]
+# Type of Change 
+- [ ] Bug fix 
+- [ ] New Feature 
+- [ ] Breaking Change 
 
-## Screenshots 
-[Add Screen shots if changes are front end] 
+# Images 
+Add images here if you are altering or adding a client sided component 
+
+# Other Notes
