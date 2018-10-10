@@ -9,7 +9,7 @@ On your machine, create a new branch. To do this from the terminal or command li
 for development. type `git clone https://github.com/efortney/CSC406-Banking`. This will give you a local copy of the application. 
 From there you must create a new branch. In the terminal, type `git checkout -b <yourIssueName>`. This will create a new branch and 
 you will be automatically switched to it. Write you code remember to try and keep you changes small if possible for easier commits!). After 
-you are satisfied with the code that you have written, in the terminal or CMD line type `git add .`. This will add all your changes to git. Next, we 
+you are satisfied with the code that you have written, in the terminal or CMD line type `git add .`. This will add all your changes to git. After that, we need to commit code. Type `git commit -m "<your message>"`. Next, we 
 need to actually push that code to the remote repo (this repo)! To do this, in terminal or CMD line type `git push --set-upstream origin <yourBranchName>`.
 Congrats! You've pushed code to the repo! 
 
