@@ -4,4 +4,9 @@ public class BankingApplication {
 
     }
 
+    public static int testMethod() {
+        System.out.println(5);
+        return 5;
+    }
+
 }
