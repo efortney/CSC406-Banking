@@ -41,6 +41,8 @@ import database.FieldNameAndType;
  *  toTextFileString() : comma-delimited stringified Customer
  *      (for writing to text file)
  *
+ *  (static) readFromTextFile() : ArrayList<Customer> customers
+ *      (uses FieldNameAndType and getFields() to parse Customer.txt line by line)
  *
  */
 public class Customer
@@ -97,6 +99,10 @@ public class Customer
     this.ZIP = ZIP;
     
   }//end of parsing Customer constructor
+
+  //this won't change, and we don't want it getting returned with other fields
+  //from calls to getFields()
+  private static String getTextFileName(){ return "./db/Customer/Customer.txt"; }
 
   public long   getID(){ return ID; }
   public String getFirstName(){ return FNAME; }
@@ -195,5 +201,79 @@ public class Customer
     
     return textFileString;
   }//end of toTextFileString
+
+
+  //line by line, reads, parses, casts and calls (parsing) constructor for each Customer
+  public static ArrayList<Customer> readFromTextFile()
+  {
+    //returned list of customers
+    ArrayList<Customer> customersFromFile = new ArrayList<Customer>(); 
+    //fields straight from text file
+    ArrayList<String> preparsedFields = new ArrayList<String>();
+    //fields after being parsed
+    ArrayList<Object> parsedFields = new ArrayList<Object>();
+
+    //open and begin reading in (line by line) customers text file
+    try (BufferedReader br = new BufferedReader(new FileReader(getTextFileName())))
+    {
+
+      String currentLine;
+     
+      while ((currentLine = br.readLine()) != null)
+      {
+        //ignore empty lines
+        if(currentLine.length() == 0) continue;
+
+        //split current line into separate fields
+        for(String field : currentLine.split(", "))
+        {
+          preparsedFields.add(field);
+        }
+        
+        //because same order is maintained between
+        //fields of Customer class, and text file  
+        int i = 0; 
+        //cast each field to its corresponding type
+        for(FieldNameAndType field : getFields())
+        {
+          if(field.getType().equals("long"))
+          {
+            parsedFields.add(Long.parseLong(preparsedFields.get(i)));
+          }
+          else if(field.getType().equals("int"))
+          {
+            parsedFields.add(Integer.parseInt(preparsedFields.get(i)));
+          }
+          else{  parsedFields.add(preparsedFields.get(i)); }//its a String
+          i += 1;
+        }//end for loop
+
+
+        Customer parsedCustomer = new Customer((long)parsedFields.get(0), //ID
+                                               (String)parsedFields.get(1),//FNAME
+                                               (String)parsedFields.get(2),//LNAME
+                                               (int)parsedFields.get(3),//SSN
+                                               (int)parsedFields.get(4),//PIN
+                                               (String)parsedFields.get(5),//USERNAME
+                                               (String)parsedFields.get(6),//PASSWORD
+                                               (String)parsedFields.get(7),//EMAIL
+                                               (String)parsedFields.get(8),//STREET_ADDRESS
+                                               (String)parsedFields.get(9),//CITY
+                                               (String)parsedFields.get(10),//STATE
+                                               (int)parsedFields.get(11));//ZIP
+
+        customersFromFile.add(parsedCustomer);
+                          
+        //clear for next line input
+        preparsedFields.clear();
+        //clear for next line input
+        parsedFields.clear();
+
+      }//end while loop
+
+    } catch (IOException e) { e.printStackTrace();}
+
+    return customersFromFile;
+  }//end of readFromTextFile
 
 }//end of Customer class
