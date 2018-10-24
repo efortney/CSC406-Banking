@@ -56,7 +56,8 @@ import database.FieldNameAndType;
  *  (static) add(Customer) : boolean success
  *      (uses writeToTextFile() after checking if customer already exists)
  *
- *
+ *  (static) delete(Customer) : boolean success
+ *      (uses deleteFromTextFile() after it confirms customer exists)
  */
 public class Customer
 {
@@ -372,5 +373,23 @@ public class Customer
 
   return success;
   }//end of add()
+
+
+  //delete customer (visible api call)
+  public static boolean delete(Customer customer) throws IOException
+  {
+    boolean success = false;
+    long id = customer.getID();
+    
+    Customer customerToDelete = new CustomerQuery().getByID(id).getFirst();
+
+    if(customerToDelete != null)
+    {
+      deleteFromTextFile(id);
+      success = true;
+    }
+    
+    return success;
+  }//end of deleteByID
 
 }//end of Customer class
