@@ -47,6 +47,9 @@ import database.FieldNameAndType;
  *  writeToTextFile() : void
  *      (uses toTextFileString() to write to text file)
  *
+ *  (static) deleteFromTextFile(long id) : void
+ *      (internal call, write backup, write to new Customer.txt)
+ *
  */
 public class Customer
 {
@@ -103,9 +106,10 @@ public class Customer
     
   }//end of parsing Customer constructor
 
-  //this won't change, and we don't want it getting returned with other fields
+  //these won't change, and we don't want them getting returned with other fields
   //from calls to getFields()
   private static String getTextFileName(){ return "./db/Customer/Customer.txt"; }
+  private static String getBackupTextFileName(){ return "./db/Customer/OLD_Customer.txt"; }
 
   public long   getID(){ return ID; }
   public String getFirstName(){ return FNAME; }
@@ -288,6 +292,59 @@ public class Customer
     writer.println(toTextFileString());
     writer.close();  
   }
+
+
+  //backup current Customer.txt => OLD_Customer.txt
+  //write all except line with matching customerID to Customer.txt
+  private static void deleteFromTextFile(long customerID) throws IOException
+  {
+    //lines to be written to new Customer.txt
+    ArrayList<String> linesToKeep = new ArrayList<String>();
+
+    //to write to backup file before replacing Customer.txt
+    PrintWriter beforeDelete = new PrintWriter(new FileWriter(getBackupTextFileName()));
+
+    //open and begin reading in (line by line) customers text file
+    try (BufferedReader br = new BufferedReader(new FileReader(getTextFileName())))
+    {
+
+      String currentLine;
+      //parsed ID
+      long recordID;
+     
+      while ((currentLine = br.readLine()) != null)
+      {
+        //ignore empty lines
+        if(currentLine.length() == 0) continue;
+
+        //write to backup
+        beforeDelete.println(currentLine);
+
+        //grab the id of the record (first field)
+        recordID = Long.parseLong(currentLine.split(", ")[0]);
+
+        //skip over delete entity
+        if(recordID == customerID) continue; 
+        else 
+        {
+          linesToKeep.add(currentLine);
+        }
+
+      }//end while loop
+
+    } catch (IOException e) { e.printStackTrace();}
+
+    //IMPORTANT: must not be called until after backup is written to.
+    PrintWriter afterDelete = new PrintWriter(new FileWriter(getTextFileName()));
+
+    //write new Customer.txt
+    for(String line : linesToKeep){ afterDelete.println(line); }
+    
+    //close open files
+    beforeDelete.close();
+    afterDelete.close();
+
+  }//end of deleteFromTextFile
 
 
 }//end of Customer class
