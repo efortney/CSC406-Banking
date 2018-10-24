@@ -56,6 +56,10 @@ import database.FieldNameAndType;
  *  (static) add(Customer) : boolean success
  *      (uses writeToTextFile() after checking if customer already exists)
  *
+ *  (static) update(Customer) : boolean success
+ *      (uses deleteFromTextFile() to delete old customer and writes new updated
+ *           customer via writeToTextFile() to Customer.txt)
+ *
  *  (static) delete(Customer) : boolean success
  *      (uses deleteFromTextFile() after it confirms customer exists)
  */
@@ -373,6 +377,27 @@ public class Customer
 
   return success;
   }//end of add()
+
+
+  //update customer (visible api call)
+  public static boolean update(Customer updatedCustomer) throws IOException
+  {
+    boolean success = false;
+    long id = updatedCustomer.getID();
+    
+    Customer customerToUpdate = new CustomerQuery().getByID(id).getFirst();
+
+    if(customerToUpdate != null)
+    {
+      //delete the old (same id)
+      deleteFromTextFile(id);
+      //write the updated customer to text file
+      updatedCustomer.writeToTextFile();
+      success = true;
+    }
+    
+    return success;
+  }//end of update()
 
 
   //delete customer (visible api call)
