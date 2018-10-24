@@ -10,6 +10,8 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import database.FieldNameAndType;
+
 
 /*
  *  Customer class serves as a database wrapper.
@@ -29,7 +31,10 @@ import java.io.IOException;
  *                                MUST MATCH. 
  * 
  * ================ INTERNAL FUNCTONS ================
- *   
+ *  
+ *  getFields() : ArrayList<FieldNameAndType> fields
+ *      (for parsing type conversion)
+ * 
  *  toString() : Stringified Customer                  
  *      (for ID(hash) and printing)
  * 
@@ -117,6 +122,36 @@ public class Customer
   public void setState(String state){ STATE = state; }
   public void setZip(int zip){ ZIP = zip; }
  
+  //get all member variables (name and type) for Customer class 
+  public static ArrayList<FieldNameAndType> getFields()
+  {
+    //FieldNameAndType is object with each field and its corresponding type
+    //obtained through reflection/introspection
+    ArrayList<FieldNameAndType> fields = new ArrayList<FieldNameAndType>();
+    
+    //java.lang.reflect.Field  :  reflective/introspective call
+    for(Field field : Customer.class.getDeclaredFields())
+    {
+      String type;
+
+      //field.getType() ==> "int" (or) "long"  (primitive)
+      if(field.getType().toString().split(" ").length == 1)
+      {
+        fields.add(new FieldNameAndType(field.getName(),field.getType().toString()));
+      }
+      
+      else //field.getType() ==> "class java.lang.String" ==> "java.lang.String" ==> "String"
+      {
+        //field.getType() ==>  ["class","java.lang.String"] ==> "java.lang.String"
+        type = field.getType().toString().split(" ")[1];
+        //"java.lang.String" ==> ["java","lang","String"] ==> "String"
+        fields.add(new FieldNameAndType(field.getName(),type.split("\\.")[2]));
+      }
+    }//end of for
+      
+    return fields;
+  }//end of getFields
+
 
   //used for generating hash (ID) and printing
   public String toString()
