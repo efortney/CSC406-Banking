@@ -50,6 +50,13 @@ import database.FieldNameAndType;
  *  (static) deleteFromTextFile(long id) : void
  *      (internal call, write backup, write to new Customer.txt)
  *
+ *
+ *================ EXTERNAL API FUNCTIONS ================
+ *
+ *  (static) add(Customer) : boolean success
+ *      (uses writeToTextFile() after checking if customer already exists)
+ *
+ *
  */
 public class Customer
 {
@@ -346,5 +353,24 @@ public class Customer
 
   }//end of deleteFromTextFile
 
+  
+  //add new customer (visible api call)
+  public static boolean add(Customer newCustomer) throws IOException
+  {
+    boolean success = false;
+    long id = newCustomer.getID();
+
+    //check if newCustomer already exists in Customer.txt
+    Customer newCustomerIsDuplicate = new CustomerQuery().getByID(id).getFirst();
+
+    if(newCustomerIsDuplicate == null)
+    {
+      //write to Customer.txt
+      newCustomer.writeToTextFile();
+      success = true;
+    }
+
+  return success;
+  }//end of add()
 
 }//end of Customer class
