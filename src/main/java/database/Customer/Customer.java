@@ -44,6 +44,9 @@ import database.FieldNameAndType;
  *  (static) readFromTextFile() : ArrayList<Customer> customers
  *      (uses FieldNameAndType and getFields() to parse Customer.txt line by line)
  *
+ *  writeToTextFile() : void
+ *      (uses toTextFileString() to write to text file)
+ *
  */
 public class Customer
 {
@@ -275,5 +278,16 @@ public class Customer
 
     return customersFromFile;
   }//end of readFromTextFile
+
+
+  //writes serialized Customer to text file
+  public void writeToTextFile() throws IOException
+  { 
+    //                                                                     append!
+    PrintWriter writer = new PrintWriter(new FileWriter(getTextFileName(), true));
+    writer.println(toTextFileString());
+    writer.close();  
+  }
+
 
 }//end of Customer class
