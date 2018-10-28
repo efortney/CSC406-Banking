@@ -93,5 +93,37 @@ public class Entity
     return fields;
   }//end of getMemberFields
 
+
+  /*
+   *   For generating record in the text file. (order matters!)
+   *    Order must match member variable declaration.
+   */
+  public String toTextFileString()
+  {
+    try
+    {
+      String delimiter = this.getDelimiter();
+
+      StringBuilder textFileString = new StringBuilder();
+
+      int index = 0;
+      int last = this.getMemberFields().size() - 1;
+
+      //generates stringified (delimited) entity (one line per record)
+      for(FieldNameTypeAndValue field : this.getMemberFields())
+      {
+        if(index == last) textFileString.append(field.getValue());
+        else
+        {
+          textFileString.append(field.getValue() + delimiter);
+        }
+        index += 1;
+      }
+    
+      return textFileString.toString();
+    }catch(NoSuchFieldException | InstantiationException | IllegalAccessException e){ e.printStackTrace(); }
+    return "";
+  }//end of toTextFileString
+
   
 }//end of Entity class
