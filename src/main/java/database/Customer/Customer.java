@@ -28,6 +28,8 @@ import database.Entity;
  *    IMPORTANT: Order of member variable declaration
  *                                     and
  *               Order of fields per line in Customer.txt
+ *                                     and
+ *               Field names and getters. (String FNAME :: getFNAME())
  *                              
  *                                MUST MATCH. 
  * 
