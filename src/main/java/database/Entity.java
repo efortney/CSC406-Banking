@@ -288,4 +288,24 @@ public class Entity
 
 
   
+  //delete entity (visible api call)
+  public boolean delete()
+  {
+    boolean success = false;
+
+      long id = this.getID();
+    
+      //check if entity exists in <entity>.txt
+      Entity entityToDelete = this.query().getByID(id).getFirst();
+
+      if(entityToDelete != null)
+      {
+        this.deleteFromTextFile();
+        success = true;
+      }
+    
+    return success;
+  }//end of deleteByID
+  
+  
 }//end of Entity class
