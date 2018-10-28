@@ -16,7 +16,7 @@ import java.io.FileReader;
  *
  *================ INTERNAL FUNCTIONS ====================
  *
- * getFields() : ArrayList<FieldNameTypeAndValue> fields
+ * getMemberFields() : ArrayList<FieldNameTypeAndValue> fields
  *      (for parsing type conversion)
  *   
  *  toString() : Stringified Entity                  
@@ -29,10 +29,10 @@ import java.io.FileReader;
  *      (uses toTextFileString() to write to text file)
  *
  *  (static) readFromTextFile() : ArrayList<String> records
- *      (uses FieldNameAndType and getFields() to parse <entity>.txt line by line)
+ *      (uses FieldNameTypeAndValue and getFields() to parse <entity>.txt line by line)
  *
  *  deleteFromTextFile(long id) : void
- *      (internal call, write backup, write to new <entity>.txt)
+ *      (write backup, write to new <entity>.txt)
  *
  *================ EXTERNAL API FUNCTIONS ================
  *
@@ -162,7 +162,7 @@ public class Entity
 
 
   
-  //line by line, reads, parses, casts and calls (parsing) constructor for each Entity
+  //line by line, reads from <entity>.txt, splitting on delimiter and returning an ArrayList of (String) records
   public static ArrayList<String> readFromTextFile(String textFileName, String delimiter) throws NoSuchFieldException,InstantiationException,IllegalAccessException
   {
  
