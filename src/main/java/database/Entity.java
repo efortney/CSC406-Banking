@@ -81,7 +81,7 @@ public class Entity
 
 
   //get all member variables (name, type and value) for Calling (subclass Entity) class 
-  public ArrayList<FieldNameTypeAndValue> getMemberFields() throws NoSuchFieldException,InstantiationException,IllegalAccessException
+  public ArrayList<FieldNameTypeAndValue> getMemberFields()
   {
     //FieldNameAndType is object with each field and its corresponding type
     //obtained through reflection/introspection
@@ -119,7 +119,7 @@ public class Entity
          {
            try{
              field.setValue(method.invoke(this));
-           }catch(InvocationTargetException e){ e.printStackTrace(); }
+           }catch(InvocationTargetException | IllegalAccessException e){ e.printStackTrace(); }
          }//end of if
        }//end of for
          
@@ -135,35 +135,31 @@ public class Entity
    */
   public String toTextFileString()
   {
-    try
+    String delimiter = this.getDelimiter();
+
+    StringBuilder textFileString = new StringBuilder();
+
+    int index = 0;
+    int last = this.getMemberFields().size() - 1;
+
+    //generates stringified (delimited) entity (one line per record)
+    for(FieldNameTypeAndValue field : this.getMemberFields())
     {
-      String delimiter = this.getDelimiter();
-
-      StringBuilder textFileString = new StringBuilder();
-
-      int index = 0;
-      int last = this.getMemberFields().size() - 1;
-
-      //generates stringified (delimited) entity (one line per record)
-      for(FieldNameTypeAndValue field : this.getMemberFields())
-      {
-        if(index == last) textFileString.append(field.getValue());
-        else
+      if(index == last) textFileString.append(field.getValue());
+      else
         {
           textFileString.append(field.getValue() + delimiter);
         }
         index += 1;
-      }
+    }
     
-      return textFileString.toString();
-    }catch(NoSuchFieldException | InstantiationException | IllegalAccessException e){ e.printStackTrace(); }
-    return "";
+    return textFileString.toString();
   }//end of toTextFileString
 
 
   
   //line by line, reads from <entity>.txt, splitting on delimiter and returning an ArrayList of (String) records
-  public static ArrayList<String> readFromTextFile(String textFileName, String delimiter) throws NoSuchFieldException,InstantiationException,IllegalAccessException
+  public static ArrayList<String> readFromTextFile(String textFileName, String delimiter)
   {
  
     //fields straight from text file
