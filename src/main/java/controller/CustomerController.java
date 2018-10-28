@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.IOException;
 
 import database.Customer.Customer;
 import database.Customer.CustomerQuery;

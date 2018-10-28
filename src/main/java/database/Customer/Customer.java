@@ -1,13 +1,8 @@
 package database.Customer;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.NoSuchFileException;
 import java.lang.NoSuchFieldException;
-import java.io.IOException;
 
 import database.FieldNameTypeAndValue;
 import database.EntityQuery;

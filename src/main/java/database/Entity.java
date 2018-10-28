@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.FileReader;
-import java.util.List;
 
 /*  
  *   Entity class is the base class for all entity types.
