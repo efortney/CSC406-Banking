@@ -239,6 +239,28 @@ public class Entity
 
   }//end of deleteFromTextFile
 
+  
+  
+  //add entity (visible api call)
+  public boolean add()
+  {
+    boolean success = false;
+
+    long id = this.getID();
+
+    //check if entity already exists in <entity>.txt
+    Entity entityToAdd = this.query().getByID(id).getFirst();
+
+    //not a duplicate in  db
+    if(entityToAdd == null)
+    {
+      //write to <entity>.txt
+      this.writeToTextFile();
+      success = true;
+    }
+
+    return success;
+  }//end of add()
 
   
 }//end of Entity class
