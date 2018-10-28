@@ -183,5 +183,62 @@ public class Entity
     }catch(IOException e){ e.printStackTrace(); }
   }//end of writeToTextFile()
 
+
+  
+    //backup current <entity>.txt => OLD_<entity>.txt
+  //write all except line with matching entityID to <entity>.txt
+  public void deleteFromTextFile()
+  {
+    //open and begin reading in (line by line) text file
+    try (BufferedReader br = new BufferedReader(new FileReader(this.getTextFileName())))
+    {
+
+      long entityID = this.getID();
+    
+      //lines to be written to new <entity>.txt
+      ArrayList<String> linesToKeep = new ArrayList<String>();
+
+      //to write to backup file before replacing <entity>.txt
+      PrintWriter beforeDelete = new PrintWriter(new FileWriter(this.getBackupTextFileName()));
+
+      String currentLine;
+      //parsed ID
+      long recordID;
+     
+      while ((currentLine = br.readLine()) != null)
+      {
+        //ignore empty lines
+        if(currentLine.length() == 0) continue;
+
+        //write to backup
+        beforeDelete.println(currentLine);
+
+        //grab the id of the record (first field)
+        recordID = Long.parseLong(currentLine.split(", ")[0]);
+
+        //skip over delete entity
+        if(recordID == entityID) continue; 
+        else 
+        {
+          linesToKeep.add(currentLine);
+        }
+
+      }//end while loop
+
+      //IMPORTANT: must not be called until after backup is written to.
+      PrintWriter afterDelete = new PrintWriter(new FileWriter(getTextFileName()));
+
+      //write new <entity>.txt
+      for(String line : linesToKeep){ afterDelete.println(line); }
+    
+      //close open files
+      beforeDelete.close();
+      afterDelete.close();
+
+    } catch (IOException e) { e.printStackTrace();}
+
+  }//end of deleteFromTextFile
+
+
   
 }//end of Entity class
