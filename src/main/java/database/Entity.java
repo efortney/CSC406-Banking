@@ -23,6 +23,28 @@ public class Entity
   public String getDelimiter(){ return ", "; }
 
 
+  //used for generating hash (ID) and printing
+  public String toString()
+  {   
+    StringBuilder asString = new StringBuilder();
+
+    try{
+      //get all fields
+      ArrayList<FieldNameTypeAndValue> fields = this.getMemberFields();
+
+      for(FieldNameTypeAndValue field : fields)
+      {
+        //skip ID field
+        if(field.getName().equals("ID")) continue ;
+
+        asString.append(field.getName() + ": " + field.getValue() + " \n");
+      }
+    }catch(Exception e){ e.printStackTrace(); }
+ 
+    return asString.toString();
+  }//end of toString
+
+
   //get all member variables (name, type and value) for Calling (subclass Entity) class 
   public ArrayList<FieldNameTypeAndValue> getMemberFields() throws NoSuchFieldException,InstantiationException,IllegalAccessException
   {
