@@ -171,5 +171,17 @@ public class Entity
   }//end of readFromTextFile
 
 
+  //writes serialized Customer to text file
+  public void writeToTextFile()
+  { 
+    try
+    {
+      //                                                                         append!
+      PrintWriter writer = new PrintWriter(new FileWriter(this.getTextFileName(), true));
+      writer.println(this.toTextFileString());
+      writer.close();
+    }catch(IOException e){ e.printStackTrace(); }
+  }//end of writeToTextFile()
+
   
 }//end of Entity class
