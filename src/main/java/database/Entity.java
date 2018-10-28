@@ -125,5 +125,51 @@ public class Entity
     return "";
   }//end of toTextFileString
 
+
+  
+  //line by line, reads, parses, casts and calls (parsing) constructor for each Entity
+  public static ArrayList<String> readFromTextFile(String textFileName, String delimiter) throws NoSuchFieldException,InstantiationException,IllegalAccessException
+  {
+ 
+    //fields straight from text file
+    ArrayList<String> preparsedEntities = new ArrayList<String>();
+
+    //open and begin reading in (line by line) <entity> text file
+    try (BufferedReader br = new BufferedReader(new FileReader(textFileName)))
+    {
+
+      String currentLine;
+      StringBuilder strB = new StringBuilder();
+     
+      while ((currentLine = br.readLine()) != null)
+      {
+        //ignore empty lines
+        if(currentLine.length() == 0) continue;
+
+        int count = 0;
+        int last = currentLine.split(delimiter).length - 1;
+        //split current line into separate fields
+        for(String field : currentLine.split(delimiter))
+        {
+          if(count == last)
+          {
+            strB.append(field.replace(",",""));
+            break;
+          }
+          strB.append(field + delimiter);
+          count += 1;
+        }
+        preparsedEntities.add(strB.toString());
+        //System.out.println(strB.toString());
+        strB.setLength(0);
+
+      }//end while loop
+
+    } catch (IOException e) { e.printStackTrace();}
+
+    return preparsedEntities;
+  }//end of readFromTextFile
+
+
   
 }//end of Entity class
