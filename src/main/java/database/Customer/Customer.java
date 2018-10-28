@@ -11,8 +11,8 @@ import database.Entity;
 
 /*
  *  Customer class serves as a database wrapper.
- *   It is a POJO with added functions for writing to
- * and reading from the text file Customer.txt.
+ *   It is a POJO with added 2 Customer specific functions,
+ *      parse() and query().
  *
  *  It has two constructors. The first
  * is for internal/application logic creation
