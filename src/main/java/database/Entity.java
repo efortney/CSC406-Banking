@@ -12,8 +12,43 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.util.List;
 
-
-
+/*  
+ *   Entity class is the base class for all entity types.
+ *
+ *================ INTERNAL FUNCTIONS ====================
+ *
+ * getFields() : ArrayList<FieldNameTypeAndValue> fields
+ *      (for parsing type conversion)
+ *   
+ *  toString() : Stringified Entity                  
+ *      (for ID(hash) and printing)
+ * 
+ *  toTextFileString() : comma-delimited stringified Entity
+ *      (for writing to text file)
+ *
+ *  writeToTextFile() : void
+ *      (uses toTextFileString() to write to text file)
+ *
+ *  (static) readFromTextFile() : ArrayList<String> records
+ *      (uses FieldNameAndType and getFields() to parse <entity>.txt line by line)
+ *
+ *  deleteFromTextFile(long id) : void
+ *      (internal call, write backup, write to new <entity>.txt)
+ *
+ *================ EXTERNAL API FUNCTIONS ================
+ *
+ *  Entity.add() : boolean success
+ *      (uses writeToTextFile() after checking if entity already exists)
+ *
+ *  Entity.update() : boolean success
+ *      (uses deleteFromTextFile() to delete old entity and writes new updated
+ *           entity via writeToTextFile() to <entity>.txt)
+ *  
+ *  Entity.delete() : boolean success
+ *      (uses deleteFromTextFile() after it confirms entity exists)
+ *
+ *
+ */
 public class Entity
 {
   //methods for polymorphism (these are called on subclasses of Entity)
@@ -21,6 +56,7 @@ public class Entity
   public String getTextFileName(){ return ""; }
   public String getBackupTextFileName(){ return ""; }
   public String getDelimiter(){ return ", "; }
+  public EntityQuery query(){ return new EntityQuery(); }
 
 
   //used for generating hash (ID) and printing

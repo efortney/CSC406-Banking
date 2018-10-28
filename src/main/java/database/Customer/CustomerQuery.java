@@ -1,8 +1,15 @@
 package database.Customer;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import java.nio.file.NoSuchFileException;
+
+import database.EntityQuery;
+import database.Entity;
+
 
 /*
  *   CustomerQuery  
@@ -21,7 +28,7 @@ import java.util.stream.Collectors;
  *                 getFirst() (returns first Customer or null)
  *                                   
  */
-public class CustomerQuery
+public class CustomerQuery extends EntityQuery
 {
   //initial query of all entities from Customer.txt
   private List<Customer> initialSet;
@@ -38,11 +45,16 @@ public class CustomerQuery
 
   public CustomerQuery()
   {
-    initialSet = Customer.readFromTextFile();
-    tempSet = new ArrayList<Customer>();
-    resultSet = new ArrayList<Customer>();
 
-    firstCallOccurred = false;
+    try
+    {
+      //initialSet = Customer.readFromTextFile();
+      initialSet = Customer.parse(Entity.readFromTextFile(new Customer().getTextFileName(), new Customer().getDelimiter()));
+      tempSet = new ArrayList<Customer>();
+      resultSet = new ArrayList<Customer>();
+
+      firstCallOccurred = false;
+    }catch(NoSuchFieldException | NoSuchFileException | InstantiationException | IllegalAccessException e){ e.printStackTrace(); }
   }
 
   // Use as chain terminator 
@@ -123,14 +135,14 @@ public class CustomerQuery
   {
     if(firstCallOccurred)
     {
-      tempSet = resultSet.stream().filter(c -> c.getUsername().equals(username))
+      tempSet = resultSet.stream().filter(c -> c.getUSERNAME().equals(username))
                          .collect(Collectors.toList());
       resultSet = tempSet;
     }
     else
     {
       //filter on getLastName() matching lastName
-      resultSet = initialSet.stream().filter(c -> c.getUsername().equals(username))
+      resultSet = initialSet.stream().filter(c -> c.getUSERNAME().equals(username))
                           .collect(Collectors.toList());
       firstCallOccurred = true;
     }

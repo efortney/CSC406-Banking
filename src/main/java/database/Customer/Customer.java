@@ -1,16 +1,17 @@
 package database.Customer;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.FileReader;
-import java.io.BufferedReader;
+import java.util.List;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.NoSuchFileException;
+import java.lang.NoSuchFieldException;
 import java.io.IOException;
 
-import database.FieldNameAndType;
+import database.FieldNameTypeAndValue;
+import database.EntityQuery;
+import database.Entity;
 
 
 /*
@@ -30,40 +31,17 @@ import database.FieldNameAndType;
  *                              
  *                                MUST MATCH. 
  * 
- * ================ INTERNAL FUNCTONS ================
- *  
- *  getFields() : ArrayList<FieldNameAndType> fields
- *      (for parsing type conversion)
- * 
- *  toString() : Stringified Customer                  
- *      (for ID(hash) and printing)
- * 
- *  toTextFileString() : comma-delimited stringified Customer
- *      (for writing to text file)
+ * ================ FUNCTONS ================
  *
- *  (static) readFromTextFile() : ArrayList<Customer> customers
- *      (uses FieldNameAndType and getFields() to parse Customer.txt line by line)
+ *  parse(ArrayList<String> preparsedRecords) : ArrayList<Customer> customers
+ * (uses getMemberFields() to parse/cast each String of fields to a Customer)
  *
- *  writeToTextFile() : void
- *      (uses toTextFileString() to write to text file)
- *
- *  (static) deleteFromTextFile(long id) : void
- *      (internal call, write backup, write to new Customer.txt)
- *
- *
- *================ EXTERNAL API FUNCTIONS ================
- *
- *  (static) add(Customer) : boolean success
- *      (uses writeToTextFile() after checking if customer already exists)
- *
- *  (static) update(Customer) : boolean success
- *      (uses deleteFromTextFile() to delete old customer and writes new updated
- *           customer via writeToTextFile() to Customer.txt)
- *
- *  (static) delete(Customer) : boolean success
- *      (uses deleteFromTextFile() after it confirms customer exists)
+ *  query() : CustomerQuery
+ * (
  */
-public class Customer
+
+
+public class Customer extends Entity
 {
   //member variables order matters
   //must be the same order as toTextFileString()'s
@@ -80,6 +58,8 @@ public class Customer
   private String CITY;
   private String STATE;
   private int    ZIP;
+
+  public Customer(){}
 
   //business logic creation constructor
   public Customer(String FNAME, String LNAME, int SSN, int PIN, String USERNAME, String PASSWORD, String EMAIL, String STREET_ADDRESS, String CITY, String STATE, int ZIP)
@@ -118,157 +98,44 @@ public class Customer
     
   }//end of parsing Customer constructor
 
-  //these won't change, and we don't want them getting returned with other fields
-  //from calls to getFields()
-  private static String getTextFileName(){ return "./db/Customer/Customer.txt"; }
-  private static String getBackupTextFileName(){ return "./db/Customer/OLD_Customer.txt"; }
-
-  public long   getID(){ return ID; }
-  public String getFirstName(){ return FNAME; }
-  public String getLastName(){ return LNAME; }
-  public int    getSSN(){ return SSN; }
-  public int    getPIN(){ return PIN; }
-  public String getUsername(){ return USERNAME; }
-  public String getPassword(){ return PASSWORD; }
-  public String getEmail(){ return EMAIL; }
-  public String getStreetAddress(){ return STREET_ADDRESS; }
-  public String getCity(){ return CITY; }
-  public String getState(){ return STATE; }
-  public int    getZip(){ return ZIP; }
-
-  public void setFirstName(String name){ FNAME = name; }
-  public void setLastName(String name){ LNAME = name; }
-  public void setPIN(int pin){ PIN = pin; }
-  public void setUserName(String uname){ USERNAME = uname; }
-  public void setPassword(String pass){ PASSWORD = pass; }
-  public void setEmail(String email){ EMAIL = email; }
-  public void setStreetAddress(String street){ STREET_ADDRESS = street; }
-  public void setCity(String city){ CITY = city; }
-  public void setState(String state){ STATE = state; }
-  public void setZip(int zip){ ZIP = zip; }
- 
-  //get all member variables (name and type) for Customer class 
-  public static ArrayList<FieldNameAndType> getFields()
-  {
-    //FieldNameAndType is object with each field and its corresponding type
-    //obtained through reflection/introspection
-    ArrayList<FieldNameAndType> fields = new ArrayList<FieldNameAndType>();
-    
-    //java.lang.reflect.Field  :  reflective/introspective call
-    for(Field field : Customer.class.getDeclaredFields())
-    {
-      String type;
-
-      //field.getType() ==> "int" (or) "long"  (primitive)
-      if(field.getType().toString().split(" ").length == 1)
-      {
-        fields.add(new FieldNameAndType(field.getName(),field.getType().toString()));
-      }
       
-      else //field.getType() ==> "class java.lang.String" ==> "java.lang.String" ==> "String"
-      {
-        //field.getType() ==>  ["class","java.lang.String"] ==> "java.lang.String"
-        type = field.getType().toString().split(" ")[1];
-        //"java.lang.String" ==> ["java","lang","String"] ==> "String"
-        fields.add(new FieldNameAndType(field.getName(),type.split("\\.")[2]));
-      }
-    }//end of for
-      
-    return fields;
-  }//end of getFields
-
-
-  //used for generating hash (ID) and printing
-  public String toString()
-  {
-    String asString = "First Name: " + getFirstName() + " \n" +
-                      "Last Name: " + getLastName() + " \n" +
-                      "Social Security #: " + getSSN() + " \n" +
-                      "PIN: " + getPIN() + " \n" +
-                      "Username: " + getUsername() + " \n" +
-                      "Password: " + getPassword() + " \n" +
-                      "Email: " + getEmail() + " \n" +
-                      "Street Address: " + getStreetAddress() + " \n" +
-                      "City: " + getCity() + " \n" + 
-                      "State: " + getState() + " \n" +
-                      "ZipCode: " + getZip() + " \n" +
-                      "ID: " + getID();
-    return asString;
-  }//end of toString
-
-
-  /*
-   *   For generating record in the text file. (order matters!)
-   *    Order must match member variable declaration.
-   */
-  public String toTextFileString()
-  {
-    String delimiter = ", ";
-
-    String textFileString = getID() + delimiter +
-                            getFirstName() + delimiter +
-                            getLastName() + delimiter +
-                            getSSN() + delimiter +
-                            getPIN() + delimiter +
-                            getUsername() + delimiter +
-                            getPassword() + delimiter +
-                            getEmail() + delimiter +
-                            getStreetAddress() + delimiter +
-                            getCity() + delimiter +
-                            getState() + delimiter +
-                            getZip();
-    
-    return textFileString;
-  }//end of toTextFileString
-
-
-  //line by line, reads, parses, casts and calls (parsing) constructor for each Customer
-  public static ArrayList<Customer> readFromTextFile()
+  //takes an arraylist of each stringified (delimited) entity and casts each to a Customer
+  public static ArrayList<Customer> parse(ArrayList<String> preparsedRecords) throws NoSuchFileException,NoSuchFieldException,InstantiationException,IllegalAccessException
   {
     //returned list of customers
     ArrayList<Customer> customersFromFile = new ArrayList<Customer>(); 
-    //fields straight from text file
+
     ArrayList<String> preparsedFields = new ArrayList<String>();
     //fields after being parsed
     ArrayList<Object> parsedFields = new ArrayList<Object>();
 
-    //open and begin reading in (line by line) customers text file
-    try (BufferedReader br = new BufferedReader(new FileReader(getTextFileName())))
-    {
+      for(String customer : preparsedRecords)
+      {  
 
-      String currentLine;
-     
-      while ((currentLine = br.readLine()) != null)
-      {
-        //ignore empty lines
-        if(currentLine.length() == 0) continue;
-
-        //split current line into separate fields
-        for(String field : currentLine.split(", "))
+        for(String field : customer.split(new Customer().getDelimiter()))
         {
-          preparsedFields.add(field);
+          preparsedFields.add((String)field);
         }
         
         //because same order is maintained between
-        //fields of Customer class, and text file  
-        int i = 0; 
-        //cast each field to its corresponding type
-        for(FieldNameAndType field : getFields())
-        {
-          if(field.getType().equals("long"))
+          //fields of Customer class, and text file  
+          int i = 0; 
+          //cast each field to its corresponding type
+          for(FieldNameTypeAndValue cfield : new Customer().getMemberFields())
           {
-            parsedFields.add(Long.parseLong(preparsedFields.get(i)));
-          }
-          else if(field.getType().equals("int"))
-          {
-            parsedFields.add(Integer.parseInt(preparsedFields.get(i)));
-          }
-          else{  parsedFields.add(preparsedFields.get(i)); }//its a String
-          i += 1;
-        }//end for loop
+            if(cfield.getType().equals("long"))
+            {
+              parsedFields.add(Long.parseLong(preparsedFields.get(i)));
+            }
+            else if(cfield.getType().equals("int"))
+            {
+              parsedFields.add(Integer.parseInt(preparsedFields.get(i)));
+            }
+            else{  parsedFields.add(preparsedFields.get(i)); }//its a String
+            i += 1;
+          }//end for loop  
 
-
-        Customer parsedCustomer = new Customer((long)parsedFields.get(0), //ID
+          Customer parsedCustomer = new Customer((long)parsedFields.get(0), //ID
                                                (String)parsedFields.get(1),//FNAME
                                                (String)parsedFields.get(2),//LNAME
                                                (int)parsedFields.get(3),//SSN
@@ -281,140 +148,56 @@ public class Customer
                                                (String)parsedFields.get(10),//STATE
                                                (int)parsedFields.get(11));//ZIP
 
-        customersFromFile.add(parsedCustomer);
+          customersFromFile.add(parsedCustomer);
                           
-        //clear for next line input
-        preparsedFields.clear();
-        //clear for next line input
-        parsedFields.clear();
+          //clear for next line input
+          parsedFields.clear();
+          preparsedFields.clear();
+        }//end of for
 
-      }//end while loop
-
-    } catch (IOException e) { e.printStackTrace();}
 
     return customersFromFile;
-  }//end of readFromTextFile
+  }//end of parse()
 
 
-  //writes serialized Customer to text file
-  public void writeToTextFile() throws IOException
-  { 
-    //                                                                     append!
-    PrintWriter writer = new PrintWriter(new FileWriter(getTextFileName(), true));
-    writer.println(toTextFileString());
-    writer.close();  
-  }
-
-
-  //backup current Customer.txt => OLD_Customer.txt
-  //write all except line with matching customerID to Customer.txt
-  private static void deleteFromTextFile(long customerID) throws IOException
+  /*
+   *  Customer inherits query() from Entity.
+   * Needs implementation to call this instead of Entity.query().
+   */
+  public EntityQuery query()
   {
-    //lines to be written to new Customer.txt
-    ArrayList<String> linesToKeep = new ArrayList<String>();
-
-    //to write to backup file before replacing Customer.txt
-    PrintWriter beforeDelete = new PrintWriter(new FileWriter(getBackupTextFileName()));
-
-    //open and begin reading in (line by line) customers text file
-    try (BufferedReader br = new BufferedReader(new FileReader(getTextFileName())))
-    {
-
-      String currentLine;
-      //parsed ID
-      long recordID;
-     
-      while ((currentLine = br.readLine()) != null)
-      {
-        //ignore empty lines
-        if(currentLine.length() == 0) continue;
-
-        //write to backup
-        beforeDelete.println(currentLine);
-
-        //grab the id of the record (first field)
-        recordID = Long.parseLong(currentLine.split(", ")[0]);
-
-        //skip over delete entity
-        if(recordID == customerID) continue; 
-        else 
-        {
-          linesToKeep.add(currentLine);
-        }
-
-      }//end while loop
-
-    } catch (IOException e) { e.printStackTrace();}
-
-    //IMPORTANT: must not be called until after backup is written to.
-    PrintWriter afterDelete = new PrintWriter(new FileWriter(getTextFileName()));
-
-    //write new Customer.txt
-    for(String line : linesToKeep){ afterDelete.println(line); }
-    
-    //close open files
-    beforeDelete.close();
-    afterDelete.close();
-
-  }//end of deleteFromTextFile
+    return new CustomerQuery();
+  }//end of query
 
   
-  //add new customer (visible api call)
-  public static boolean add(Customer newCustomer) throws IOException
-  {
-    boolean success = false;
-    long id = newCustomer.getID();
+  //these won't change, and we don't want them getting returned with other fields
+  //from calls to getFields()
+  public String getTextFileName(){ return "./db/Customer/Customer.txt"; }
+  public String getBackupTextFileName(){ return "./db/Customer/OLD_Customer.txt"; }
+  public String getDelimiter(){ return ", "; }
 
-    //check if newCustomer already exists in Customer.txt
-    Customer newCustomerIsDuplicate = new CustomerQuery().getByID(id).getFirst();
+  public long   getID(){ return ID; }
+  public String getFNAME(){ return FNAME; }
+  public String getLNAME(){ return LNAME; }
+  public int    getSSN(){ return SSN; }
+  public int    getPIN(){ return PIN; }
+  public String getUSERNAME(){ return USERNAME; }
+  public String getPASSWORD(){ return PASSWORD; }
+  public String getEMAIL(){ return EMAIL; }
+  public String getSTREET_ADDRESS(){ return STREET_ADDRESS; }
+  public String getCITY(){ return CITY; }
+  public String getSTATE(){ return STATE; }
+  public int    getZIP(){ return ZIP; }
 
-    if(newCustomerIsDuplicate == null)
-    {
-      //write to Customer.txt
-      newCustomer.writeToTextFile();
-      success = true;
-    }
-
-  return success;
-  }//end of add()
-
-
-  //update customer (visible api call)
-  public static boolean update(Customer updatedCustomer) throws IOException
-  {
-    boolean success = false;
-    long id = updatedCustomer.getID();
-    
-    Customer customerToUpdate = new CustomerQuery().getByID(id).getFirst();
-
-    if(customerToUpdate != null)
-    {
-      //delete the old (same id)
-      deleteFromTextFile(id);
-      //write the updated customer to text file
-      updatedCustomer.writeToTextFile();
-      success = true;
-    }
-    
-    return success;
-  }//end of update()
-
-
-  //delete customer (visible api call)
-  public static boolean delete(Customer customer) throws IOException
-  {
-    boolean success = false;
-    long id = customer.getID();
-    
-    Customer customerToDelete = new CustomerQuery().getByID(id).getFirst();
-
-    if(customerToDelete != null)
-    {
-      deleteFromTextFile(id);
-      success = true;
-    }
-    
-    return success;
-  }//end of deleteByID
+  public void setFNAME(String name){ FNAME = name; }
+  public void setLNAME(String name){ LNAME = name; }
+  public void setPIN(int pin){ PIN = pin; }
+  public void setUSERNAME(String uname){ USERNAME = uname; }
+  public void setPASSWORD(String pass){ PASSWORD = pass; }
+  public void setEMAIL(String email){ EMAIL = email; }
+  public void setSTREET_ADDRESS(String street){ STREET_ADDRESS = street; }
+  public void setCITY(String city){ CITY = city; }
+  public void setSTATE(String state){ STATE = state; }
+  public void setZIP(int zip){ ZIP = zip; }
 
 }//end of Customer class
