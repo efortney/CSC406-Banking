@@ -262,5 +262,30 @@ public class Entity
     return success;
   }//end of add()
 
+
+  
+    //update entity (visible api call)
+  public boolean update()
+  {
+    boolean success = false;
+
+    long id = this.getID();
+    
+    //check if newEntity already exists in <entity>.txt
+    Entity entityToUpdate = this.query().getByID(id).getFirst();
+
+    if(entityToUpdate != null)
+    {
+      //delete the old (same id)
+      this.deleteFromTextFile();
+      //write the updated entity to text file
+      this.writeToTextFile();
+      success = true;
+    }
+    
+    return success;
+  }//end of update()
+
+
   
 }//end of Entity class
