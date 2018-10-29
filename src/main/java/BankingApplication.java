@@ -1,11 +1,14 @@
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -31,14 +34,18 @@ public class BankingApplication extends Application {
     Boolean haveOC = false;
     Boolean haveLoan = false;
     //Customer information
-    String SSN = "704984002";
-    String Firstname = "Wei";
+    String SSN = "123456789";
+    String FirstName = "Wei";
     String LastName = "Zhang";
     String Address = "1723 s 39th";
     String City = "saint joseph";
     String State = "MO";
     String ZipCode = "64507";
     String Balance = "1000";
+    String password = "123456";
+    TableView<database> availableCTable;
+    Button submit;
+    TextField fnameInput, lnameInput, addressInput, ssnInput, zipCodeInput, cityInput, stateInput;
 
 
     public static void main(String[] args) {
@@ -67,19 +74,35 @@ public class BankingApplication extends Application {
         Label password = new Label("Password");
         password.setTextFill(Color.WHITE);
         TextField unInput = new TextField();
+        //check if the username is all number
         unInput.setPrefColumnCount(20);
-        TextField pwInput = new TextField();
+        PasswordField pwInput = new PasswordField();
         pwInput.setPrefColumnCount(20);
         //create quit and log in button
         Button quit = new Button("Quit");
         //action of quit button is closing window and ending program
-        quit.setOnAction(e -> primaryStage.close());
+        quit.setOnAction(e -> {
+            if (ConfirmBox.display("Close Program", "Are you ready to leave? ", 0)) primaryStage.close();
+            else {
+                try {
+                    start(primaryStage);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
         //quit will close the window
         Button enter = new Button("Enter");
         //action of enter button is inputing the log in info, retrieving the user info, indicating the next page: customer lookup or overview of accounts
         enter.setOnAction(e -> {
-            if ((manager || teller) == true) lookUp(primaryStage);
-            else overview(primaryStage);
+            boolean vaildUserName = isInt(unInput, unInput.getText());
+            if ((manager || teller) && vaildUserName == true) lookUp(primaryStage);
+            else if (customer && vaildUserName == true) overview(primaryStage);
+            else {
+                AlertBox.display("invalid user name", "Invalid user name", 0);
+                pwInput.clear();
+                unInput.clear();
+            }
         });
         quit.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
         enter.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
@@ -122,7 +145,7 @@ public class BankingApplication extends Application {
         date.setStyle("-fx-fill: white; -fx-stroke: white");
         //create label for customer name
         Label greeting = new Label("Welcome, ");
-        Label Fname = new Label(Firstname);
+        Label Fname = new Label(FirstName);
         Label Lname = new Label(" " + LastName);
         greeting.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
         Fname.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
@@ -161,9 +184,6 @@ public class BankingApplication extends Application {
         CheckBox lo = new CheckBox();
         lo.setSelected(haveLoan);
         lo.setDisable(true);
-        //create hyperlink acking if user want to edit user info
-        Hyperlink edit = new Hyperlink("Do you want to edit account information?");
-        edit.setOnAction(e -> edit(primaryStage));
         //create button for quit which will lead back to log in page
         Button quit = new Button("Quit");
         //quit button will go back to log in page and start over in log in lookup
@@ -198,7 +218,7 @@ public class BankingApplication extends Application {
         pane.add(lo, 1, 4);
         pane.setAlignment(Pos.CENTER);
         VBox mainPane = new VBox();
-        mainPane.getChildren().addAll(head, title, pane, edit, quit);
+        mainPane.getChildren().addAll(head, title, pane, quit);
         //set some spacing between the elements
         pane.setVgap(25);
         pane.setHgap(150);
@@ -214,7 +234,7 @@ public class BankingApplication extends Application {
     public void checking(Stage primaryStage) {
         //name label
         Label greeting = new Label("Hello, ");
-        Label Fname = new Label(Firstname);
+        Label Fname = new Label(FirstName);
         Label Lname = new Label(" " + LastName);
         greeting.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
         Fname.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
@@ -313,7 +333,7 @@ public class BankingApplication extends Application {
     public void saving(Stage primaryStage) {
         //name label
         Label greeting = new Label("Hello, ");
-        Label Fname = new Label(Firstname);
+        Label Fname = new Label(FirstName);
         Label Lname = new Label(" " + LastName);
         greeting.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
         Fname.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
@@ -408,7 +428,7 @@ public class BankingApplication extends Application {
     public void CreditCard(Stage primaryStage) {
         //name label
         Label greeting = new Label("Hello, ");
-        Label Fname = new Label(Firstname);
+        Label Fname = new Label(FirstName);
         Label Lname = new Label(" " + LastName);
         greeting.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
         Fname.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
@@ -524,7 +544,7 @@ public class BankingApplication extends Application {
     public void loan(Stage primaryStage) {
         //name label
         Label greeting = new Label("Hello, ");
-        Label Fname = new Label(Firstname);
+        Label Fname = new Label(FirstName);
         Label Lname = new Label(" " + LastName);
         greeting.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
         Fname.setStyle("-fx-text-fill: yellow; -fx-text-stroke: white; -fx-font-weight: bold; -fx-font-size: 20");
@@ -846,7 +866,7 @@ public class BankingApplication extends Application {
         primaryStage.setScene(scene);
     }
 
-    //look up page
+    //look up,delete and create a new account page
     public void lookUp(Stage primaryStage) {
         //title:checking
         Label title = new Label("Look Up");
@@ -861,22 +881,133 @@ public class BankingApplication extends Application {
         Text availableC = new Text("Available Customer:");
         availableC.setFont(Font.font(null, 20));
         availableC.setFill(Color.WHITE);
-        TableView availableCTable = new TableView();
-        TableColumn SSN = new TableColumn("SSN");
-        SSN.setPrefWidth(125);
-        TableColumn fName = new TableColumn("First Name");
-        fName.setPrefWidth(125);
-        TableColumn lName = new TableColumn("Last Name");
-        lName.setPrefWidth(125);
-        TableColumn zipCode = new TableColumn("Zipcode");
-        zipCode.setPrefWidth(125);
-        availableCTable.getColumns().addAll(SSN, fName, lName, zipCode);
+
+        //get SSN
+        TableColumn<database, Integer> ssn = new TableColumn<>("SSN");
+        ssn.setPrefWidth(80);
+        ssn.setCellValueFactory(new PropertyValueFactory<>("SSN"));
+        //get first name
+        TableColumn<database, String> first_name = new TableColumn<>("First Name");
+        first_name.setPrefWidth(85);
+        first_name.setCellValueFactory(new PropertyValueFactory<>("fname"));
+        //get last name
+        TableColumn<database, String> lastName = new TableColumn<>("Last Name");
+        lastName.setPrefWidth(85);
+        lastName.setCellValueFactory(new PropertyValueFactory<>("lname"));
+        //get zip code
+        TableColumn<database, String> zipcode = new TableColumn<>("Zip Code");
+        zipcode.setPrefWidth(70);
+        zipcode.setCellValueFactory(new PropertyValueFactory<>("zipcode"));
+        //get the address
+        TableColumn<database, String> address = new TableColumn<>("Address");
+        address.setPrefWidth(100);
+        address.setCellValueFactory(new PropertyValueFactory<>("address"));
+        //get the city
+        TableColumn<database, String> city = new TableColumn<>("City");
+        city.setPrefWidth(90);
+        city.setCellValueFactory(new PropertyValueFactory<>("city"));
+        //get the state
+        TableColumn<database, String> state = new TableColumn<>("State");
+        state.setPrefWidth(60);
+        state.setCellValueFactory(new PropertyValueFactory<>("state"));
+
+
+        availableCTable = new TableView<>();
+        availableCTable.setItems(getData(SSN, FirstName, LastName, Address, City, State, ZipCode));
+        availableCTable.getColumns().addAll(ssn, first_name, lastName, address, city, state, zipcode);
+        availableCTable.setEditable(true);
+        first_name.setCellFactory(TextFieldTableCell.forTableColumn());
+        lastName.setCellFactory(TextFieldTableCell.forTableColumn());
+        city.setCellFactory(TextFieldTableCell.forTableColumn());
+        address.setCellFactory(TextFieldTableCell.forTableColumn());
+        state.setCellFactory(TextFieldTableCell.forTableColumn());
+        zipcode.setCellFactory(TextFieldTableCell.forTableColumn());
+
         ScrollPane customerBox = new ScrollPane();
         customerBox.setContent(availableCTable);
         customerBox.setFitToWidth(true);
-        customerBox.setPrefWidth(500);
-        customerBox.setPrefHeight(150);
-        //buttons for home, quite, and transfer money
+        customerBox.setPrefWidth(600);
+        customerBox.setPrefHeight(200);
+        Text signUp = new Text("Create New Account:");
+        signUp.setFont(Font.font(null, FontWeight.BOLD, FontPosture.REGULAR, 25));
+        signUp.setTextAlignment(TextAlignment.CENTER);
+        signUp.setFill(Color.RED);
+        Label fName = new Label("First name:");
+        fName.setStyle("-fx-text-fill: yellow;-fx-font-size: 18");
+        fnameInput = new TextField();
+        fnameInput.setPrefWidth(100);
+        Label lName = new Label("Last name: ");
+        lName.setStyle("-fx-text-fill: yellow;-fx-font-size: 18");
+        lnameInput = new TextField();
+        lnameInput.setPrefWidth(100);
+
+        Label ssnLable = new Label("SSN: ");
+        ssnLable.setStyle("-fx-text-fill: yellow;-fx-font-size: 18");
+        ssnInput = new TextField();
+        ssnInput.setPrefWidth(100);
+
+        Label Laddress = new Label("Address:");
+        Laddress.setStyle("-fx-text-fill: white;-fx-font-size: 18");
+        addressInput = new TextField();
+        addressInput.setPrefWidth(150);
+
+        Label Lcity = new Label("City:");
+        Lcity.setStyle("-fx-text-fill: white;-fx-font-size: 18");
+        cityInput = new TextField();
+        cityInput.setPrefWidth(100);
+
+        Label zipCode = new Label("ZipCode");
+        zipCode.setStyle("-fx-text-fill: white;-fx-font-size: 18");
+        zipCodeInput = new TextField();
+        zipCodeInput.setPrefWidth(50);
+
+        Text Tstate = new Text("State:");
+        Tstate.setFill(Color.WHITE);
+        Tstate.setFont(Font.font(null, 20));
+
+        ComboBox<String> stateBox = new ComboBox<>();
+        stateBox.getItems().addAll("SL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA"
+                , "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM",
+                "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY");
+        stateBox.setVisibleRowCount(5);
+        stateBox.getSelectionModel().selectedItemProperty()
+                .addListener((v, oldValue, newValue) -> {
+                    if (newValue != null)
+                        State = newValue.toString();
+                });
+
+        Label deposit = new Label("Deposit:");
+        TextField depositAmount = new TextField();
+        depositAmount.setPrefWidth(25);
+
+        submit = new Button("Submit");
+        submit.setOnAction(e -> submitButtonClicked());
+
+        GridPane fRowlayout = new GridPane();
+        fRowlayout.add(fName, 0, 1);
+        fRowlayout.add(fnameInput, 1, 1);
+        fRowlayout.add(lName, 2, 1);
+        fRowlayout.add(lnameInput, 3, 1);
+        fRowlayout.add(ssnLable, 4, 1);
+        fRowlayout.add(ssnInput, 5, 1);
+        fRowlayout.setHgap(10);
+        fRowlayout.setVgap(10);
+        fRowlayout.setAlignment(Pos.CENTER);
+        GridPane sRowlayout = new GridPane();
+        sRowlayout.add(Laddress, 0, 0);
+        sRowlayout.add(addressInput, 1, 0);
+        sRowlayout.add(Lcity, 2, 0);
+        sRowlayout.add(cityInput, 3, 0);
+        sRowlayout.add(Tstate, 4, 0);
+        sRowlayout.add(stateBox, 5, 0);
+        sRowlayout.add(zipCode, 6, 0);
+        sRowlayout.add(zipCodeInput, 7, 0);
+
+        sRowlayout.setAlignment(Pos.CENTER);
+        sRowlayout.setHgap(10);
+        sRowlayout.setVgap(10);
+
+        // buttons for home, quite, and transfer money
         Button search = new Button("Search");
         search.setOnAction(e -> overview(primaryStage));
         search.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
@@ -890,7 +1021,7 @@ public class BankingApplication extends Application {
         });
         quit.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
         Button delete = new Button("Delete");
-        delete.setOnAction(e -> System.out.println("Deleting data"));
+        delete.setOnAction(e -> deleteButtonClicked());
         delete.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
 
         //create pane
@@ -909,185 +1040,61 @@ public class BankingApplication extends Application {
         searchByPane.add(searchInput, 2, 0);
         searchByPane.setAlignment(Pos.CENTER);
         VBox pane = new VBox();
-        pane.getChildren().addAll(title, searchByPane, Customer, action);
+        pane.getChildren().addAll(title, searchByPane, Customer, action, signUp, fRowlayout, sRowlayout, submit);
         pane.setStyle("-fx-background-color: black");
         pane.setAlignment(Pos.CENTER);
-        pane.setSpacing(20);
+        pane.setSpacing(10);
         scene = new Scene(pane, 700, 700);
         primaryStage.setScene(scene);
     }
 
-    //editing page
-    public void edit(Stage primaryStage) {
-        //create text for customer info
-        Text fName = new Text("First Name");
-        fName.setFill(Color.YELLOW);
-        fName.setFont(Font.font(null, FontWeight.BOLD, 25));
-        Text lName = new Text("Last Name");
-        lName.setFill(Color.YELLOW);
-        lName.setFont(Font.font(null, FontWeight.BOLD, 25));
-        Text ssn = new Text("SSN:");
-        ssn.setFill(Color.WHITE);
-        ssn.setFont(Font.font(null, 20));
-        //customer can only edit address
-        Text addr = new Text("Address:");
-        addr.setFill(Color.WHITE);
-        addr.setFont(Font.font(null, 20));
-        TextField addrInput = new TextField();
-        addrInput.setPrefColumnCount(42);
-        Text city = new Text("City:");
-        city.setFill(Color.WHITE);
-        city.setFont(Font.font(null, 20));
-        TextField cityInput = new TextField();
-        cityInput.setPrefColumnCount(30);
-        Text state = new Text("State:");
-        state.setFill(Color.WHITE);
-        state.setFont(Font.font(null, 20));
-        ChoiceBox stateInput = new ChoiceBox();
-        stateInput.setItems(FXCollections.observableArrayList("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"));
-        Text zip = new Text("zip:");
-        zip.setFill(Color.WHITE);
-        zip.setFont(Font.font(null, 20));
-        TextField zipInput = new TextField();
-        zipInput.setPrefColumnCount(5);
-
-        Button home = new Button("Home");
-        home.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                overview(primaryStage);
-            }
-        });
-        home.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
-        Button quit = new Button("Quit");
-        quit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    start(primaryStage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        quit.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
-        //save button to save edited info and go back home to overview
-        Button save = new Button("Save");
-        save.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //some sort of function to save info
-                //then go back to overview page
-                overview(primaryStage);
-            }
-        });
-        save.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
-
-        HBox name = new HBox();
-        name.getChildren().addAll(fName, lName);
-        name.setSpacing(25);
-        HBox addr1 = new HBox();
-        addr1.getChildren().addAll(addr, addrInput);
-        HBox addr2 = new HBox();
-        addr2.getChildren().addAll(city, cityInput, state, stateInput, zip, zipInput);
-        HBox buttons = new HBox();
-        buttons.getChildren().addAll(quit, home, save);
-        buttons.setSpacing(50);
-        buttons.setAlignment(Pos.CENTER);
-        VBox pane = new VBox();
-        pane.getChildren().addAll(name, ssn, addr1, addr2, buttons);
-        pane.setStyle("-fx-background-color: black");
-        pane.setAlignment(Pos.CENTER_LEFT);
-        pane.setSpacing(25);
-        pane.setPadding(new Insets(10));
-        scene = new Scene(pane, 700, 700);
-        primaryStage.setScene(scene);
-    }
-
-    //error page:not enough money
-    public void notEnoughMoney(Stage primaryStage, int value) {
-        //create message text
-        Text message = new Text("Not Enough Balance ");
-        message.setFill(Color.YELLOW);
-        message.setFont(Font.font(null, 25));
-        Text checkingBalance = new Text("Checking balance:");
-        checkingBalance.setFill(Color.WHITE);
-        Text savingBalance = new Text("Savings balance:");
-        savingBalance.setFill(Color.WHITE);
-        //text for balance
-        Text chBalance = new Text("$$$$");
-        chBalance.setFill(Color.WHITE);
-        Text saBalance = new Text("$$$$");
-        saBalance.setFill(Color.WHITE);
-        Text creditBalance = new Text("Credit balance:");
-        creditBalance.setFill(Color.WHITE);
-        Text crBalance = new Text("$$$$");
-        crBalance.setFill(Color.WHITE);
-        Text loanBalance = new Text("Loan balance:");
-        loanBalance.setFill(Color.WHITE);
-        Text loBalance = new Text("$$$$");
-        loBalance.setFill(Color.WHITE);
-        //button for back, home, and quit
-        Button back = new Button("Back");
-        back.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
-        Button quit = new Button("Quit");
-        quit.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
-
-        //create pane
-        HBox action = new HBox();
-        action.getChildren().addAll(quit, back);
-        action.setSpacing(50);
-        action.setAlignment(Pos.CENTER);
-        GridPane balance = new GridPane();
-        Text accountType = new Text();
-        Text accountBalance = new Text();
-        if (value == 1) {
-            accountType = checkingBalance;
-            accountBalance = chBalance;
-        } else if (value == 2) {
-            accountType = savingBalance;
-            accountBalance = saBalance;
-        } else if (value == 3) {
-            accountType = creditBalance;
-            accountBalance = crBalance;
-        } else {
-            accountType = loanBalance;
-            accountBalance = loBalance;
+    //yes or no window
+    public boolean isInt(TextField user, String userName) {
+        try {
+            int userID = Integer.parseInt(user.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            ;
+            return false;
         }
-        balance.add(accountType, 0, 0);
-        balance.add(accountBalance, 1, 0);
-        balance.setAlignment(Pos.CENTER);
-        balance.setHgap(20);
-        VBox pane = new VBox(message, balance, action);
-        pane.setStyle("-fx-background-color: black");
-        pane.setSpacing(20);
-        pane.setAlignment(Pos.CENTER);
-        scene = new Scene(pane, 700, 700);
-        primaryStage.setScene(scene);
     }
 
-    //error page:invalid input page
-    public void invalidInput(Stage primaryStage) {
-        //create message text
-        Text message = new Text("Invalid Input");
-        message.setFill(Color.YELLOW);
-        message.setFont(Font.font(null, 30));
-        //button for back, home, and quit
-        Button back = new Button("Back");
-        back.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
-        Button quit = new Button("Quit");
-        quit.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
+    //get all of the customer
+    public ObservableList<database> getData(String SSN, String f_Name, String l_Name, String address, String city, String state, String zipCode) {
+        ObservableList<database> customer = FXCollections.observableArrayList();
+        customer.addAll(new database(SSN, f_Name, l_Name, address, city, state, zipCode));
+        customer.addAll(new database("1", "BB", "BB", "somewhere", "somecity", "somestate", "5"));
 
-        //create pane
-        HBox action = new HBox();
-        action.getChildren().addAll(quit, back);
-        action.setSpacing(50);
-        action.setAlignment(Pos.CENTER);
-        VBox pane = new VBox(message, action);
-        pane.setStyle("-fx-background-color: black");
-        pane.setSpacing(20);
-        pane.setAlignment(Pos.CENTER);
-        scene = new Scene(pane, 700, 700);
-        primaryStage.setScene(scene);
+        return customer;
+    }
+
+    public void submitButtonClicked() {
+        database customer = new database();
+        try {
+            customer.setFname(fnameInput.getText());
+            customer.setLname(lnameInput.getText());
+            customer.setZipcode(zipCodeInput.getText());
+            customer.setSSN(ssnInput.getText());
+            customer.setAddress(addressInput.getText());
+            customer.setCity(cityInput.getText());
+            customer.setState(State);
+        } catch (Exception er) {
+            AlertBox.display("Invalid input", "Invalid input\n Please Enter Again", 0);
+        }
+        availableCTable.getItems().add(customer);
+        fnameInput.clear();
+        lnameInput.clear();
+        ssnInput.clear();
+        zipCodeInput.clear();
+        stateInput.clear();
+        addressInput.clear();
+    }
+
+    public void deleteButtonClicked() {
+        ObservableList<database> customerSelected, allCustomer;
+        allCustomer = availableCTable.getItems();
+        customerSelected = availableCTable.getSelectionModel().getSelectedItems();
+        customerSelected.forEach(allCustomer::remove);
     }
 }
+
