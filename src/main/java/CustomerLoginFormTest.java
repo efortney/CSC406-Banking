@@ -1,5 +1,4 @@
 
-import java.io.IOException;
 import java.util.List;
 
 import javafx.application.Application;
@@ -7,10 +6,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
 
 import javafx.scene.layout.GridPane;
@@ -93,15 +90,13 @@ public class CustomerLoginFormTest extends Application
       public void handle(ActionEvent event)
       {
         Customer loggedIn = null;
-        try
-        {
-          loggedIn = CustomerController.authorizeCustomer(userTextField.getText(),pwBox.getText());
-        }catch(IOException e){ System.out.println(e.getMessage()); }
+
+        loggedIn = CustomerController.authorizeCustomer(userTextField.getText(),pwBox.getText());
 
         if(loggedIn != null)
         {
           actiontarget.setFill(Color.GREEN);
-          actiontarget.setText("Hello " + loggedIn.getFirstName() + " " + loggedIn.getLastName());
+          actiontarget.setText("Hello " + loggedIn.getFNAME() + " " + loggedIn.getLNAME());
         }
         else
         {
@@ -122,7 +117,7 @@ public class CustomerLoginFormTest extends Application
       actiontarget.setFill(Color.BLUE);
       for(Customer c : customers)
       {
-        results.append(c.getFirstName() + " " + c.getLastName() + "==>" +c.getUsername() + " : " + c.getPassword() + "\n"); 
+        results.append(c.getFNAME() + " " + c.getLNAME() + "==>" +c.getUSERNAME() + " : " + c.getPASSWORD() + "\n");
       }
 
       actiontarget.setText(results.toString());
@@ -146,11 +141,8 @@ public class CustomerLoginFormTest extends Application
                                             "TEST",//STATE
                                             0);//ZIP
 
-        try
-        {
-          //add new customer
-          Customer.add(newCustomer);
-        }catch(IOException e){ e.getMessage(); }
+        //add new customer
+        newCustomer.add();
         
         helpBtn.fire();
 
@@ -169,11 +161,7 @@ public class CustomerLoginFormTest extends Application
       Customer test = new CustomerQuery().getBySSN(0).getFirst();
       if(test != null)
       {
-        try
-        {
-          Customer.delete(test);
-        }catch(IOException e){ e.getMessage(); }
-
+        test.delete();
         helpBtn.fire();
       }
       if(test == null)
