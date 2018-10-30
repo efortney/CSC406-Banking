@@ -113,7 +113,7 @@ public class Entity
        try
        {
          //get the get method for this field
-         Method getter = this.getClass().getDeclaredMethod("get" + field.getName(),null);
+         Method getter = this.getClass().getDeclaredMethod("get" + field.getName());
          //set value by invoking getter for this field
          field.setValue(getter.invoke(this));
        }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){ e.printStackTrace(); }
