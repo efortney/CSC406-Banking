@@ -130,7 +130,7 @@ public class CustomerLoginFormTest extends Application
       {
         //Add a new test customer
         Customer newCustomer = new Customer("TEST",//FNAME
-                                            "TEST",//NAME
+                                            "TEST",//LNAME
                                             0,//SSN
                                             "TEST",//USERNAME
                                             "TEST",//PASSWORD

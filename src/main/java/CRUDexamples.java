@@ -16,7 +16,7 @@ public class CRUDexamples
   {
 
     //Add a new test customer
-      Customer newCustomer = new Customer("TEST",//LNAME
+      Customer newCustomer = new Customer("TEST",//FNAME
                                           "TEST",//LNAME
                                           0,//SSN
                                           "TEST",//USERNAME
