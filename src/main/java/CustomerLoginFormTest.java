@@ -129,10 +129,9 @@ public class CustomerLoginFormTest extends Application
       if(new CustomerQuery().getBySSN(0).getFirst() == null)
       {
         //Add a new test customer
-        Customer newCustomer = new Customer("TEST",//FIRSTNAME
-                                            "TEST",//LASTNAME
+        Customer newCustomer = new Customer("TEST",//FNAME
+                                            "TEST",//NAME
                                             0,//SSN
-                                            0,//PIN
                                             "TEST",//USERNAME
                                             "TEST",//PASSWORD
                                             "TEST@TEST",//EMAIL

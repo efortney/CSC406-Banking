@@ -47,7 +47,6 @@ public class Customer extends Entity
   private String FNAME;
   private String LNAME;
   private int    SSN;
-  private int    PIN;
   private String USERNAME;
   private String PASSWORD;
   private String EMAIL;
@@ -59,12 +58,11 @@ public class Customer extends Entity
   public Customer(){}
 
   //business logic creation constructor
-  public Customer(String FNAME, String LNAME, int SSN, int PIN, String USERNAME, String PASSWORD, String EMAIL, String STREET_ADDRESS, String CITY, String STATE, int ZIP)
+  public Customer(String FNAME, String LNAME, int SSN, String USERNAME, String PASSWORD, String EMAIL, String STREET_ADDRESS, String CITY, String STATE, int ZIP)
   {
     this.FNAME = FNAME;
     this.LNAME = LNAME;
     this.SSN = SSN;
-    this.PIN = PIN;
     this.USERNAME = USERNAME;
     this.PASSWORD = PASSWORD;
     this.EMAIL = EMAIL;
@@ -78,13 +76,12 @@ public class Customer extends Entity
   }//end of initial creation Customer constructor
 
   //parsing constructor (when constructing objects from parsed text file)
-  public Customer(long ID, String FNAME, String LNAME, int SSN, int PIN, String USERNAME, String PASSWORD, String EMAIL, String STREET_ADDRESS, String CITY, String STATE, int ZIP)
+  public Customer(long ID, String FNAME, String LNAME, int SSN, String USERNAME, String PASSWORD, String EMAIL, String STREET_ADDRESS, String CITY, String STATE, int ZIP)
   {
     this.ID = ID;
     this.FNAME = FNAME;
     this.LNAME = LNAME;
     this.SSN = SSN;
-    this.PIN = PIN;
     this.USERNAME = USERNAME;
     this.PASSWORD = PASSWORD;
     this.EMAIL = EMAIL;
@@ -136,14 +133,13 @@ public class Customer extends Entity
                                                (String)parsedFields.get(1),//FNAME
                                                (String)parsedFields.get(2),//LNAME
                                                (int)parsedFields.get(3),//SSN
-                                               (int)parsedFields.get(4),//PIN
-                                               (String)parsedFields.get(5),//USERNAME
-                                               (String)parsedFields.get(6),//PASSWORD
-                                               (String)parsedFields.get(7),//EMAIL
-                                               (String)parsedFields.get(8),//STREET_ADDRESS
-                                               (String)parsedFields.get(9),//CITY
-                                               (String)parsedFields.get(10),//STATE
-                                               (int)parsedFields.get(11));//ZIP
+                                               (String)parsedFields.get(4),//USERNAME
+                                               (String)parsedFields.get(5),//PASSWORD
+                                               (String)parsedFields.get(6),//EMAIL
+                                               (String)parsedFields.get(7),//STREET_ADDRESS
+                                               (String)parsedFields.get(8),//CITY
+                                               (String)parsedFields.get(9),//STATE
+                                               (int)parsedFields.get(10));//ZIP
 
           customersFromFile.add(parsedCustomer);
                           
@@ -177,7 +173,6 @@ public class Customer extends Entity
   public String getFNAME(){ return FNAME; }
   public String getLNAME(){ return LNAME; }
   public int    getSSN(){ return SSN; }
-  public int    getPIN(){ return PIN; }
   public String getUSERNAME(){ return USERNAME; }
   public String getPASSWORD(){ return PASSWORD; }
   public String getEMAIL(){ return EMAIL; }
@@ -188,7 +183,6 @@ public class Customer extends Entity
 
   public void setFNAME(String name){ FNAME = name; }
   public void setLNAME(String name){ LNAME = name; }
-  public void setPIN(int pin){ PIN = pin; }
   public void setUSERNAME(String uname){ USERNAME = uname; }
   public void setPASSWORD(String pass){ PASSWORD = pass; }
   public void setEMAIL(String email){ EMAIL = email; }

@@ -16,10 +16,9 @@ public class CRUDexamples
   {
 
     //Add a new test customer
-      Customer newCustomer = new Customer("TEST",//FNAME
+      Customer newCustomer = new Customer("TEST",//LNAME
                                           "TEST",//LNAME
                                           0,//SSN
-                                          0,//PIN
                                           "TEST",//USERNAME
                                           "TEST",//PASSWORD
                                           "TEST@TEST",//EMAIL
@@ -35,7 +34,7 @@ public class CRUDexamples
 
       if(!newCustomer.add()) System.out.println("new customer already added.");
 
-      newCustomer.setPIN(1234);
+      newCustomer.setEMAIL("PROD@PROD");
 
       newCustomer.update();
 
