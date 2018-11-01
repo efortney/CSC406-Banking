@@ -103,7 +103,7 @@ public class Customer extends Entity
         this.STATE = STATE;
         this.ZIP = ZIP;
 
-    }//end of parsing Customer constructor
+    }//end of partial (business logic) constructor
 
       
   //takes an arraylist of each stringified (delimited) entity and casts each to a Customer
