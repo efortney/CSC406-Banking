@@ -103,6 +103,8 @@ public class Customer extends Entity
         this.STATE = STATE;
         this.ZIP = ZIP;
 
+        this.ID = toString().hashCode();
+
     }//end of partial (business logic) constructor
 
       
