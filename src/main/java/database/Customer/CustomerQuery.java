@@ -141,7 +141,7 @@ public class CustomerQuery extends EntityQuery
     }
     else
     {
-      //filter on getLastName() matching lastName
+      //filter on getUsername() matching username
       resultSet = initialSet.stream().filter(c -> c.getUSERNAME().equals(username))
                           .collect(Collectors.toList());
       firstCallOccurred = true;
@@ -149,5 +149,60 @@ public class CustomerQuery extends EntityQuery
 
     return this;
   }//end of getByUsername()
+
+  //filter on fname
+  public CustomerQuery getByfname(String fname)
+  {
+    if(firstCallOccurred)
+    {
+      tempSet = resultSet.stream().filter(c -> c.getFNAME().toUpperCase().equals(fname.toUpperCase()))
+              .collect(Collectors.toList());
+      resultSet = tempSet;
+    }
+    else
+    {
+      //filter on getfname() matching fname
+      resultSet = initialSet.stream().filter(c ->c.getFNAME().toUpperCase().equals(fname.toUpperCase()))
+              .collect(Collectors.toList());
+      firstCallOccurred = true;
+    }
+    return this;
+  }
+  //filter on lname
+  public CustomerQuery getBylname(String lname)
+  {
+    if(firstCallOccurred)
+    {
+      tempSet = resultSet.stream().filter(c -> c.getLNAME().toUpperCase().equals(lname.toUpperCase()))
+              .collect(Collectors.toList());
+      resultSet = tempSet;
+    }
+    else
+    {
+      //filter on getlname() matching lname
+      resultSet = initialSet.stream().filter(c ->c.getLNAME().toUpperCase().equals(lname.toUpperCase()))
+              .collect(Collectors.toList());
+      firstCallOccurred = true;
+    }
+    return this;
+  }
+
+  public CustomerQuery getByzip(int zip)
+  {
+    if(firstCallOccurred)
+    {
+      tempSet = resultSet.stream().filter(c -> c.getZIP() == zip)
+              .collect(Collectors.toList());
+      resultSet = tempSet;
+    }
+    else
+    {
+      //filter on getlzip() matching zip
+      resultSet = initialSet.stream().filter(c -> c.getZIP() == zip)
+              .collect(Collectors.toList());
+      firstCallOccurred = true;
+    }
+    return this;
+  }
 
 }//end of class CustomerQuery
