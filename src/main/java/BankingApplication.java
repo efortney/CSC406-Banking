@@ -1,3 +1,4 @@
+import com.sun.rowset.internal.Row;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 import database.Customer.Customer;
 import database.Customer.CustomerQuery;
 
+import java.util.Collection;
 import java.util.Date;
 
 //Note:
@@ -38,18 +40,21 @@ public class BankingApplication extends Application {
     Boolean haveOC = false;
     Boolean haveLoan = false;
     //Customer information
-    String SSN = "123456789";
-    String FirstName = "Wei";
-    String LastName = "Zhang";
-    String Address = "1723 s 39th";
-    String City = "saint joseph";
-    String State = "MO";
-    String ZipCode = "64507";
-    String Balance = "1000";
-    String password = "123456";
+    String SSN ;
+    String FirstName;
+    String LastName;
+    String Address;
+    String City ;
+    String State ;
+    String ZipCode;
+    String Balance;
+    String password;
     TableView<database> availableCTable;
-    Button submit;
-    TextField fnameInput, lnameInput, addressInput, ssnInput, zipCodeInput, cityInput, stateInput;
+    String fieldPicked;
+
+
+    Button submit,add;
+    TextField fnameInput, lnameInput, addressInput, ssnInput, zipCodeInput, cityInput;
 
 
     public static void main(String[] args) {
@@ -232,15 +237,16 @@ public class BankingApplication extends Application {
         searchBy.setFill(Color.WHITE);
         TextField searchInput = new TextField();
         searchInput.setPrefWidth(150);
-        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList("SSN", "First Name", "Last Name", "Zip code"));
+        ComboBox<String> cb = new ComboBox<>();
+        cb.getItems().addAll("SSN", "First Name", "Last Name", "Zip code");
         //Search box
         Text availableC = new Text("Available Customer:");
         availableC.setFont(Font.font(null, 20));
         availableC.setFill(Color.WHITE);
 
         //get SSN
-        TableColumn<database, Integer> ssn = new TableColumn<>("SSN");
-        ssn.setPrefWidth(80);
+        TableColumn<database, String> ssn = new TableColumn<>("SSN");
+        ssn.setPrefWidth(85);
         ssn.setCellValueFactory(new PropertyValueFactory<>("SSN"));
         //get first name
         TableColumn<database, String> first_name = new TableColumn<>("First Name");
@@ -267,17 +273,9 @@ public class BankingApplication extends Application {
         state.setPrefWidth(60);
         state.setCellValueFactory(new PropertyValueFactory<>("state"));
 
-
         availableCTable = new TableView<>();
-        availableCTable.setItems(getData(SSN, FirstName, LastName, Address, City, State, ZipCode));
         availableCTable.getColumns().addAll(ssn, first_name, lastName, address, city, state, zipcode);
         availableCTable.setEditable(true);
-        first_name.setCellFactory(TextFieldTableCell.forTableColumn());
-        lastName.setCellFactory(TextFieldTableCell.forTableColumn());
-        city.setCellFactory(TextFieldTableCell.forTableColumn());
-        address.setCellFactory(TextFieldTableCell.forTableColumn());
-        state.setCellFactory(TextFieldTableCell.forTableColumn());
-        zipcode.setCellFactory(TextFieldTableCell.forTableColumn());
 
         ScrollPane customerBox = new ScrollPane();
         customerBox.setContent(availableCTable);
@@ -336,8 +334,22 @@ public class BankingApplication extends Application {
         TextField depositAmount = new TextField();
         depositAmount.setPrefWidth(25);
 
-        submit = new Button("Submit");
-        submit.setOnAction(e -> submitButtonClicked());
+        add = new Button("Add");
+        add.setOnAction(e -> {
+            if(ssnInput.getText()==null||fnameInput.getText()==null||lnameInput.getText()==null||addressInput.getText()==null||State==null||zipCodeInput.getText()==null||cityInput.getText()==null){
+                AlertBox.display("Invalid input","Invalid input",0);
+            }else{
+            Customer newCustomer=new Customer(ssnInput.getText(),fnameInput.getText(),lnameInput.getText(),addressInput.getText(),cityInput.getText(),State,zipCodeInput.getText());
+            addDataToDatabase(newCustomer);
+                fnameInput.clear();
+                lnameInput.clear();
+                ssnInput.clear();
+                zipCodeInput.clear();
+                addressInput.clear();
+                stateBox.getItems().clear();
+                cityInput.clear();
+            }
+        });
 
         GridPane fRowlayout = new GridPane();
         fRowlayout.add(fName, 0, 1);
@@ -364,10 +376,25 @@ public class BankingApplication extends Application {
         sRowlayout.setVgap(10);
 
         // buttons for home, quite, and transfer money
+        //"SSN", "First Name", "Last Name", "Zip code")
         Button search = new Button("Search");
         search.setOnAction(e -> {
-            overview(primaryStage);
-
+            cb.getSelectionModel().selectedItemProperty()
+                    .addListener((v, oldValue, newValue) -> {
+                            fieldPicked=newValue.toString();
+                    });
+            if (fieldPicked.equals("SSN")){
+                searchCustomerbySSN(searchInput.getText(),availableCTable);
+            }else if (fieldPicked.equals("First Name")){
+                searchCustomerbyfname(searchInput.getText(),availableCTable);
+            }else if (fieldPicked.equals("Last Name")){
+                searchCustomerbyLastname(searchInput.getText(),availableCTable);
+            }else if (fieldPicked.equals("Zip code")){
+                searchCustomerbyzip(searchInput.getText(),availableCTable);
+            }else{
+                AlertBox.display("Error","Please pick a search field",0);
+            }
+            searchInput.clear();
         });
         search.setStyle("-fx-background-color: yellow; -fx-text-fill: black");
         Button quit = new Button("Quit");
@@ -399,7 +426,7 @@ public class BankingApplication extends Application {
         searchByPane.add(searchInput, 2, 0);
         searchByPane.setAlignment(Pos.CENTER);
         VBox pane = new VBox();
-        pane.getChildren().addAll(title, searchByPane, Customer, action, signUp, fRowlayout, sRowlayout, submit);
+        pane.getChildren().addAll(title, searchByPane, Customer, action, signUp, fRowlayout, sRowlayout, add);
         pane.setStyle("-fx-background-color: black");
         pane.setAlignment(Pos.CENTER);
         pane.setSpacing(10);
@@ -418,43 +445,89 @@ public class BankingApplication extends Application {
         }
     }
 
-    //get all of the customer
-    public ObservableList<database> getData(String SSN, String f_Name, String l_Name, String address, String city, String state, String zipCode) {
-        ObservableList<database> customer = FXCollections.observableArrayList();
-        customer.addAll(new database(SSN, f_Name, l_Name, address, city, state, zipCode));
-        customer.addAll(new database("1", "BB", "BB", "somewhere", "somecity", "somestate", "5"));
-
-        return customer;
-    }
-
-    public void submitButtonClicked() {
-        database customer = new database();
-        Customer customer1 = new CustomerQuery().getBySSN(343221891).getFirst();
+    public ObservableList<database> searchCustomerbySSN(String SSN,TableView newdata) {
+        ObservableList<database>foundCustomer=null;
         try {
-              customer.setFname(customer1.getFNAME());
-//            customer.setLname(lnameInput.getText());
-//            customer.setZipcode(zipCodeInput.getText());
-//            customer.setSSN(ssnInput.getText());
-//            customer.setAddress(addressInput.getText());
-//            customer.setCity(cityInput.getText());
-//            customer.setState(State);
+            Customer customer1 = new CustomerQuery().getBySSN(SSN).getFirst();
+          foundCustomer=FXCollections.observableArrayList(
+                    new database(customer1.getSSN(),customer1.getFNAME(),customer1.getLNAME(),customer1.getSTREET_ADDRESS(),customer1.getCITY(),customer1.getSTATE(),customer1.getZIP())
+            );
+          newdata.setItems(foundCustomer);
         } catch (Exception er) {
-            AlertBox.display("Invalid input", "Invalid input\n Please Enter Again", 0);
+            AlertBox.display("Invalid SSN", "Can not find SSN\n Please Enter Again", 0);
         }
-//        availableCTable.getItems().add(customer1);
-//        fnameInput.clear();
-//        lnameInput.clear();
-//        ssnInput.clear();
-//        zipCodeInput.clear();
-//        stateInput.clear();
-//        addressInput.clear();
+        return foundCustomer;
+    }
+    public ObservableList<database> searchCustomerbyfname(String fname,TableView newdata) {
+        ObservableList<database>foundCustomer=null;
+        try {
+            Customer customer1 = new CustomerQuery().getByfname(fname).getFirst();
+            foundCustomer=FXCollections.observableArrayList(
+                    new database(customer1.getSSN(),customer1.getFNAME(),customer1.getLNAME(),customer1.getSTREET_ADDRESS(),customer1.getCITY(),customer1.getSTATE(),customer1.getZIP())
+            );
+            newdata.setItems(foundCustomer);
+        } catch (Exception er) {
+            AlertBox.display("Invalid first name", "Can not find first name\n Please Enter Again", 0);
+        }
+        return foundCustomer;
+    }
+    public ObservableList<database> searchCustomerbyLastname(String lname,TableView newdata) {
+        ObservableList<database>foundCustomer=null;
+        try {
+            Customer customer1 = new CustomerQuery().getBylname(lname).getFirst();
+            foundCustomer=FXCollections.observableArrayList(
+                    new database(customer1.getSSN(),customer1.getFNAME(),customer1.getLNAME(),customer1.getSTREET_ADDRESS(),customer1.getCITY(),customer1.getSTATE(),customer1.getZIP())
+            );
+            newdata.setItems(foundCustomer);
+        } catch (Exception er) {
+            AlertBox.display("Invalid last name", "Can not find last name\n Please Enter Again", 0);
+        }
+        return foundCustomer;
+    }
+    public ObservableList<database> searchCustomerbyzip(String zip,TableView newdata) {
+        ObservableList<database>foundCustomer=null;
+        try {
+            Customer customer1 = new CustomerQuery().getByzip(zip).getFirst();
+            foundCustomer=FXCollections.observableArrayList(
+                    new database(customer1.getSSN(),customer1.getFNAME(),customer1.getLNAME(),customer1.getSTREET_ADDRESS(),customer1.getCITY(),customer1.getSTATE(),customer1.getZIP())
+            );
+            newdata.setItems(foundCustomer);
+
+        } catch (Exception er) {
+            AlertBox.display("Invalid zipcode", "Can not find zipcode\n Please Enter Again", 0);
+        }
+        return foundCustomer;
+    }
+    // availableCTable.setItems( searchCustomerbySSN("343221891",availableCTable));
+    public void displayAlluser(TableView alluser){
+        alluser.setItems( searchCustomerbySSN("343221891",alluser));
+        alluser.setItems( searchCustomerbyfname("Broderick",alluser));
+        alluser.setItems( searchCustomerbySSN("113212530",alluser));
+        alluser.setItems( searchCustomerbySSN("314213777",alluser));
+        alluser.setItems( searchCustomerbySSN("234274322",alluser));
+        alluser.setItems( searchCustomerbySSN("826219321",alluser));
+        alluser.setItems( searchCustomerbySSN("927281623",alluser));
+        alluser.setItems( searchCustomerbySSN("393731845",alluser));
+        alluser.setItems( searchCustomerbySSN("126951584",alluser));
+        alluser.setItems( searchCustomerbySSN("828235791",alluser));
+        alluser.setItems( searchCustomerbySSN("927261987",alluser));
+        alluser.setItems( searchCustomerbySSN("143299783",alluser));
+        alluser.setItems( searchCustomerbySSN("723419193",alluser));
+        alluser.setItems( searchCustomerbySSN("527216921",alluser));
+        alluser.setItems( searchCustomerbySSN("277271419",alluser));
+
     }
 
-    public void deleteButtonClicked() {
-        ObservableList<database> customerSelected, allCustomer;
-        allCustomer = availableCTable.getItems();
-        customerSelected = availableCTable.getSelectionModel().getSelectedItems();
-        customerSelected.forEach(allCustomer::remove);
+    public void addDataToDatabase(Customer newCustomer){
+       if(newCustomer.add()==true){
+           AlertBox.display("Successful","New Customer addeed",0);
+       }
+       else{AlertBox.display("Unsuccessful","New Customer not addeed",0);
+       }
+    }
+    public void deleteButtonClicked(){
+
     }
 }
+
 

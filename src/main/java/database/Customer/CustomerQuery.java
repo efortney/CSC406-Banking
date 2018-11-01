@@ -112,22 +112,76 @@ public class CustomerQuery extends EntityQuery
   }
 
   //filter on SSN
-  public CustomerQuery getBySSN(int ssn)
+  public CustomerQuery getBySSN(String ssn)
   {
     if(firstCallOccurred)
     {
-      tempSet = resultSet.stream().filter(c -> c.getSSN() == ssn)
+      tempSet = resultSet.stream().filter(c -> c.getSSN().equals(ssn))
                          .collect(Collectors.toList());
       resultSet = tempSet;
     }
     else
     {
       //filter on getSSN() matching ssn
-      resultSet = initialSet.stream().filter(c -> c.getSSN() == ssn)
+      resultSet = initialSet.stream().filter(c -> c.getSSN().equals(ssn))
                           .collect(Collectors.toList());
       firstCallOccurred = true;
     }
+    return this;
+  }
 
+  //filter on fname
+  public CustomerQuery getByfname(String fname)
+  {
+    if(firstCallOccurred)
+    {
+      tempSet = resultSet.stream().filter(c -> c.getFNAME().toUpperCase().equals(fname.toUpperCase()))
+              .collect(Collectors.toList());
+      resultSet = tempSet;
+    }
+    else
+    {
+      //filter on getfname() matching fname
+      resultSet = initialSet.stream().filter(c ->c.getFNAME().toUpperCase().equals(fname.toUpperCase()))
+              .collect(Collectors.toList());
+      firstCallOccurred = true;
+    }
+    return this;
+  }
+  //filter on lname
+  public CustomerQuery getBylname(String lname)
+  {
+    if(firstCallOccurred)
+    {
+      tempSet = resultSet.stream().filter(c -> c.getLNAME().toUpperCase().equals(lname.toUpperCase()))
+              .collect(Collectors.toList());
+      resultSet = tempSet;
+    }
+    else
+    {
+      //filter on getlname() matching lname
+      resultSet = initialSet.stream().filter(c ->c.getLNAME().toUpperCase().equals(lname.toUpperCase()))
+              .collect(Collectors.toList());
+      firstCallOccurred = true;
+    }
+    return this;
+  }
+
+  public CustomerQuery getByzip(String zip)
+  {
+    if(firstCallOccurred)
+    {
+      tempSet = resultSet.stream().filter(c -> c.getZIP().toUpperCase().equals(zip.toUpperCase()))
+              .collect(Collectors.toList());
+      resultSet = tempSet;
+    }
+    else
+    {
+      //filter on getlzip() matching zip
+      resultSet = initialSet.stream().filter(c ->c.getZIP().toUpperCase().equals(zip.toUpperCase()))
+              .collect(Collectors.toList());
+      firstCallOccurred = true;
+    }
     return this;
   }
   //filter on Username

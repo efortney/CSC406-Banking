@@ -10,9 +10,8 @@ public class database {
 
     public database() {
         //int the variables
-        SSN = "";
-        fname = "zzhang";
-        lname = "wwei";
+        fname = "";
+        lname = "";
         address = "";
         city = "";
         zipcode = "";

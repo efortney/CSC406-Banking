@@ -52,6 +52,7 @@ public class Entity
 {
   //methods for polymorphism (these are called on subclasses of Entity)
   public long   getID(){ return 0; }
+  public String getSSN(){return "null";}
   public String getTextFileName(){ return ""; }
   public String getBackupTextFileName(){ return ""; }
   public String getDelimiter(){ return ", "; }
@@ -277,11 +278,12 @@ public class Entity
   {
     boolean success = false;
 
-    long id = this.getID();
+    String ssn=this.getSSN();
+    //long id = this.getID();
 
     //check if entity already exists in <entity>.txt
-    Entity entityToAdd = this.query().getByID(id).getFirst();
-
+    //Entity entityToAdd = this.query().getByID(id).getFirst();
+    Entity entityToAdd = this.query().getBySSN(ssn).getFirst();
     //not a duplicate in  db
     if(entityToAdd == null)
     {
