@@ -19,7 +19,7 @@ import database.Customer.CustomerQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TableViewSample extends Application {
+public class CustomerTableViewSample extends Application {
 
     //table
     private TableView<UICustomer> table;
@@ -58,11 +58,12 @@ public class TableViewSample extends Application {
 
         TextField searchBox = new TextField();
         Button searchButton = new Button("Search");
+        Button getAllButton = new Button("Get All");
 
         //a single row for combobox, search input, and search button
         final HBox hbox = new HBox();
         hbox.setSpacing(25);
-        hbox.getChildren().addAll(searchTypeComboBox, searchBox, searchButton);
+        hbox.getChildren().addAll(searchTypeComboBox, searchBox, searchButton, getAllButton);
 
         //when search button clicked
         searchButton.setOnAction(event ->
@@ -80,6 +81,27 @@ public class TableViewSample extends Application {
                                                        c.getCITY(),
                                                        c.getSTATE(),
                                                        c.getZIP()));
+            }
+            //add ui data to TableView
+            table.setItems(FXCollections.observableArrayList(uiCustomerArrayList));
+
+        });
+
+        //when getAll button clicked
+        getAllButton.setOnAction(event ->
+        {
+            //remove old contents
+            uiCustomerArrayList.clear();
+            //populate ui data
+            for(Customer c : getAllCustomers())
+            {
+                uiCustomerArrayList.add(new UICustomer(c.getFNAME(),
+                        c.getLNAME(),
+                        c.getSSN(),
+                        c.getSTREET_ADDRESS(),
+                        c.getCITY(),
+                        c.getSTATE(),
+                        c.getZIP()));
             }
             //add ui data to TableView
             table.setItems(FXCollections.observableArrayList(uiCustomerArrayList));
@@ -106,6 +128,11 @@ public class TableViewSample extends Application {
         stage.show();
     }
 
+    public List<Customer> getAllCustomers()
+    {
+        return new CustomerQuery().getAll().execute();
+    }
+
     //calls appropriate query based on combobox selection and search input
     // (checks for appropriate input type can add alert box for empty or
     //         incorrect search criteria type)
@@ -115,7 +142,7 @@ public class TableViewSample extends Application {
 
         if(stype.equals("SSN"))
         {
-            if(!isNumeric(searchBox.getText())) return customers;
+            if(!isInt(searchBox.getText())) return customers;
             else {
                 customers = new CustomerQuery().getBySSN(Integer.parseInt(searchBox.getText())).execute();
             }
@@ -130,7 +157,7 @@ public class TableViewSample extends Application {
         }
         if(stype.equals("Zip Code"))
         {
-            if(!isNumeric(searchBox.getText())) return customers;
+            if(!isInt(searchBox.getText())) return customers;
             else {
                 customers = new CustomerQuery().getByzip(Integer.parseInt(searchBox.getText())).execute();
             }
@@ -140,11 +167,11 @@ public class TableViewSample extends Application {
     }
 
     //type checking of search input
-    private static boolean isNumeric(String str)
+    private static boolean isInt(String str)
     {
         try
         {
-            double d = Double.parseDouble(str);
+            int i = Integer.parseInt(str);
         }
         catch(NumberFormatException nfe)
         {
@@ -202,7 +229,7 @@ public class TableViewSample extends Application {
         //see TableViewColumnResizePolicyDemo
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         //add columns to TableView
-        table.getColumns().addAll(firstNameCol, lastNameCol, addressCol, cityCol, stateCol, zipCol);
+        table.getColumns().addAll(SSNCol, firstNameCol, lastNameCol, addressCol, cityCol, stateCol, zipCol);
         //populate TableView
         table.setItems(data);
 
@@ -243,11 +270,11 @@ public class TableViewSample extends Application {
             lastname.set(fName);
         }
  
-        public int getSSN() {
+        public int getSsn() {
             return ssn.get();
         }
  
-        public void setSSN(int ssn) {
+        public void setSsn(int ssn) {
             this.ssn.set(ssn);
         }
 
