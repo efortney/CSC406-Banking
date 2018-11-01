@@ -92,6 +92,19 @@ public class Customer extends Entity
     
   }//end of parsing Customer constructor
 
+
+    public Customer(String FNAME, String LNAME, int SSN, String STREET_ADDRESS, String CITY, String STATE, int ZIP)
+    {
+        this.FNAME = FNAME;
+        this.LNAME = LNAME;
+        this.SSN = SSN;
+        this.STREET_ADDRESS = STREET_ADDRESS;
+        this.CITY = CITY;
+        this.STATE = STATE;
+        this.ZIP = ZIP;
+
+    }//end of parsing Customer constructor
+
       
   //takes an arraylist of each stringified (delimited) entity and casts each to a Customer
   public static ArrayList<Customer> parse(ArrayList<String> preparsedRecords) throws NoSuchFileException,NoSuchFieldException,InstantiationException,IllegalAccessException
