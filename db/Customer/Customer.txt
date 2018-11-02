@@ -1,15 +1,19 @@
-928026639, Ronald, Jones, 343221891, North 4th, Clarkesdale, MO, 64493
--687753753, Mark, Ingrem, 323211999, Jules, St. Joseph, MO, 64503
--1956249630, Sherry, Harrison, 113212530, Sylvania, St. Joseph, MO, 64501
-1113432912, John, Morgeson, 314213777, West 3rd, Wathena, KS, 54910
--2137595549, Gary, Gilkerson, 234274322, South Highly, St. Joseph, MO, 64503
--28245287, Mary, Francis, 826219321, Jules, St. Joseph, MO, 64503
--331365768, Carolyn, Johnson, 927281623, Mocking Bird, St. Joseph, MO, 64502
--1915126861, Larry, Waite, 393731845, Senior Dr., St. Joseph, MO, 64503
-1957023051, Marilyn, Macklin, 126951584, Lovers Lane, St. Joseph, MO, 64502
--1106716999, Lana, McGlynn, 828235791, Stonecrest, St. Joseph, MO, 64501
-1281031528, John, Munzer, 927261987, N. Mulbury, St. Joseph, MO, 64502
--1950240104, Mary, White, 143299783, Kioa, Ellwood, KS, 56708
-876399347, Jerry, Gronius, 723419193, Martha Lane, Gower, MO, 63301
--1209941616, Martin, Williams, 527216921, Lovers Lane, St. Joseph, MO, 64502
--1470002102, Broderick, Jones, 277271419, Park Lane, St. Joseph, MO, 64501
+-1097000923, Huntington, Innerstone, 423453245, Bonner Court, Saint Paul, MN, 55172
+-238425493, Maximilian, Thickpenny, 345879912, 36465 Grayhawk Plaza, Atlanta, GA, 30358
+100966170, Tootsie, Trounce, 423148894, 39459 Kennedy Plaza, Columbia, SC, 29220
+-1874140243, Frannie, Bosenworth, 677879013, 13530 Main Trail, Youngstown, OH, 44555
+-747813545, Bendix, Yesichev, 345599870, 35758 Glacier Hill Terrace, Loretto, MN, 55598
+-593477523, Riobard, Hourican, 345812332, 73 Vera Road, Albuquerque, MN, 87201
+710646847, Catherin, Demcik, 423168945, 391 Lukken Center, Birmingham, AL, 35295
+-484751505, Barnard, Heak, 435678787, 40 Scoville Pass, San Francisco, CA, 94177
+-1021556271, Alia, Gokes, 563432913, 85198 Sunnyside Pass, Anchorage, AK, 99507
+-181667012, Cathlene, Flecknell, 771071482, 06804 Emmet Avenue, Topeka, KS, 66622
+1432576950, Anica, Batsford, 311925515, 2 Leroy Drive, Seattle, WA, 98127
+496575067, Clarice, Constantinou, 851593249, 65 Kedzie Center, Saint Paul, MN, 55172
+-1055693604, Nataniel, Landman, 842297994, 46391 Haas Junction, Pueblo, CO, 81015
+-146397652, Editha, Wink, 859073870, 48 Everett Center, Las Vegas, NV, 89115
+693337368, Keith, Bugler, 137068199, 45 Sherman Crossing, San Francisco, CA, 94126
+-730774042, Biddy, Goodwyn, 591695408, 57855 Mendota Junction, Bakersfield, CA, 93386
+1464592596, Bobinette, Doick, 228693235, 32116 Pleasure Avenue, Billings, MT, 59112
+-276701620, Stacy, Pervew, 535565040, 994 Haas Lane, Las Vegas, NV, 89087
+-2048395355, Ina, MacAiline, 377969391, 32464 Derek Lane, Lansing, MI, 48919
