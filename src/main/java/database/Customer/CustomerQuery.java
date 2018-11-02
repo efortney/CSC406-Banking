@@ -184,24 +184,5 @@ public class CustomerQuery extends EntityQuery
     }
     return this;
   }
-  //filter on Username
-  public CustomerQuery getByUsername(String username)
-  {
-    if(firstCallOccurred)
-    {
-      tempSet = resultSet.stream().filter(c -> c.getUSERNAME().equals(username))
-                         .collect(Collectors.toList());
-      resultSet = tempSet;
-    }
-    else
-    {
-      //filter on getLastName() matching lastName
-      resultSet = initialSet.stream().filter(c -> c.getUSERNAME().equals(username))
-                          .collect(Collectors.toList());
-      firstCallOccurred = true;
-    }
-
-    return this;
-  }//end of getByUsername()
 
 }//end of class CustomerQuery
