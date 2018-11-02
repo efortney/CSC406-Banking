@@ -47,50 +47,12 @@ public class Customer extends Entity
   private String FNAME;
   private String LNAME;
   private String    SSN;
-  private String USERNAME;
-  private String PASSWORD;
-  private String EMAIL;
   private String STREET_ADDRESS;
   private String CITY;
   private String STATE;
   private String    ZIP;
 
   public Customer(){}
-
-  //business logic creation constructor
-  public Customer(String FNAME, String LNAME, String SSN, String USERNAME, String PASSWORD, String EMAIL, String STREET_ADDRESS, String CITY, String STATE, String ZIP)
-  {
-    this.FNAME = FNAME;
-    this.LNAME = LNAME;
-    this.SSN = SSN;
-    this.USERNAME = USERNAME;
-    this.PASSWORD = PASSWORD;
-    this.EMAIL = EMAIL;
-    this.STREET_ADDRESS = STREET_ADDRESS;
-    this.CITY = CITY;
-    this.STATE = STATE;
-    this.ZIP = ZIP;
-
-    this.ID = toString().hashCode();
-    
-  }//end of initial creation Customer constructor
-
-  //parsing constructor (when constructing objects from parsed text file)
-  public Customer(long ID, String FNAME, String LNAME, String SSN, String USERNAME, String PASSWORD, String EMAIL, String STREET_ADDRESS, String CITY, String STATE, String ZIP)
-  {
-    this.ID = ID;
-    this.FNAME = FNAME;
-    this.LNAME = LNAME;
-    this.SSN = SSN;
-    this.USERNAME = USERNAME;
-    this.PASSWORD = PASSWORD;
-    this.EMAIL = EMAIL;
-    this.STREET_ADDRESS = STREET_ADDRESS;
-    this.CITY = CITY;
-    this.STATE = STATE;
-    this.ZIP = ZIP;
-    
-  }//end of parsing Customer constructor
 
   public Customer(String SSN,String FNAME, String LNAME, String STREET_ADDRESS, String CITY, String STATE, String ZIP)
   {
@@ -102,6 +64,22 @@ public class Customer extends Entity
     this.STATE = STATE;
     this.ZIP = ZIP;
 
+    this.ID = toString().hashCode();
+
+  }//end of (business logic) Customer constructor
+
+  //parsing constructor (when constructing objects from parsed text file)
+  public Customer(long ID, String FNAME, String LNAME, String SSN, String STREET_ADDRESS, String CITY, String STATE, String ZIP)
+  {
+    this.ID = ID;
+    this.FNAME = FNAME;
+    this.LNAME = LNAME;
+    this.SSN = SSN;
+    this.STREET_ADDRESS = STREET_ADDRESS;
+    this.CITY = CITY;
+    this.STATE = STATE;
+    this.ZIP = ZIP;
+    
   }//end of parsing Customer constructor
 
       
@@ -145,13 +123,10 @@ public class Customer extends Entity
                                                (String)parsedFields.get(1),//FNAME
                                                (String)parsedFields.get(2),//LNAME
                                                (String)parsedFields.get(3),//SSN
-                                               (String)parsedFields.get(4),//USERNAME
-                                               (String)parsedFields.get(5),//PASSWORD
-                                               (String)parsedFields.get(6),//EMAIL
-                                               (String)parsedFields.get(7),//STREET_ADDRESS
-                                               (String)parsedFields.get(8),//CITY
-                                               (String)parsedFields.get(9),//STATE
-                                               (String)parsedFields.get(10));//ZIP
+                                               (String)parsedFields.get(4),//STREET_ADDRESS
+                                               (String)parsedFields.get(5),//CITY
+                                               (String)parsedFields.get(6),//STATE
+                                               (String)parsedFields.get(7));//ZIP
 
           customersFromFile.add(parsedCustomer);
                           
@@ -185,9 +160,6 @@ public class Customer extends Entity
   public String getFNAME(){ return FNAME; }
   public String getLNAME(){ return LNAME; }
   public String    getSSN(){ return SSN; }
-  public String getUSERNAME(){ return USERNAME; }
-  public String getPASSWORD(){ return PASSWORD; }
-  public String getEMAIL(){ return EMAIL; }
   public String getSTREET_ADDRESS(){ return STREET_ADDRESS; }
   public String getCITY(){ return CITY; }
   public String getSTATE(){ return STATE; }
@@ -195,9 +167,6 @@ public class Customer extends Entity
 
   public void setFNAME(String name){ FNAME = name; }
   public void setLNAME(String name){ LNAME = name; }
-  public void setUSERNAME(String uname){ USERNAME = uname; }
-  public void setPASSWORD(String pass){ PASSWORD = pass; }
-  public void setEMAIL(String email){ EMAIL = email; }
   public void setSTREET_ADDRESS(String street){ STREET_ADDRESS = street; }
   public void setCITY(String city){ CITY = city; }
   public void setSTATE(String state){ STATE = state; }

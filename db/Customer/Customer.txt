@@ -1,15 +1,15 @@
-928026639, Ronald, Jones, 343221891, ronnie89, slimjimjerry, ronnie89@hotmail.com, North 4th, Clarkesdale, MO, 64493
--687753753, Mark, Ingrem, 323211999, mastodon345, skip9540, mastodon345@hotmail.com, Jules, St. Joseph, MO, 64503
--1956249630, Sherry, Harrison, 113212530, cherry89, pi33ap1e, cherry89@hotmail.com, Sylvania, St. Joseph, MO, 64501
-1113432912, John, Morgeson, 314213777, jmorgeson25, s1mp1epa55w0rd, jmorgeson25@hotmail.com, West 3rd, Wathena, KS, 54910
--2137595549, Gary, Gilkerson, 234274322, theGman99, bo55lo55fo55, theGman99@hotmail.com, South Highly, St. Joseph, MO, 64503
--28245287, Mary, Francis, 826219321, mfrancis132, mifl0wer5gr0w, mfrancis132@hotmail.com, Jules, St. Joseph, MO, 64503
--331365768, Carolyn, Johnson, 927281623, cjohnny95, 9un4ndjmp, cjohnny95@hotmail.com, Mocking Bird, St. Joseph, MO, 64502
--1915126861, Larry, Waite, 393731845, lwaite89, w0nt56rn, lwaite89@hotmail.com, Senior Dr., St. Joseph, MO, 64503
-1957023051, Marilyn, Macklin, 126951584, marilymackin67, 34tn56rn78, marilymackin67@hotmail.com, Lovers Lane, St. Joseph, MO, 64502
--1106716999, Lana, McGlynn, 828235791, lmcglyn98, l8gdaim155, lmcglyn98@hotmail.com, Stonecrest, St. Joseph, MO, 64501
-1281031528, John, Munzer, 927261987, munzy97, panzertanker98, munzy97@hotmail.com, N. Mulbury, St. Joseph, MO, 64502
--1950240104, Mary, White, 143299783, mwhite971, quin5689, mwhite971@hotmail.com, Kioa, Ellwood, KS, 56708
-876399347, Jerry, Gronius, 723419193, jgron123, 78ertpertg8rt, jgron123@hotmail.com, Martha Lane, Gower, MO, 63301
--1209941616, Martin, Williams, 527216921, mwilli99, 89sandst0rm8, mwilli99@hotmail.com, Lovers Lane, St. Joseph, MO, 64502
--1470002102, Broderick, Jones, 277271419, bjones89, s1ll8s0nyar, bjones89@hotmail.com, Park Lane, St. Joseph, MO, 64501
+928026639, Ronald, Jones, 343221891, North 4th, Clarkesdale, MO, 64493
+-687753753, Mark, Ingrem, 323211999, Jules, St. Joseph, MO, 64503
+-1956249630, Sherry, Harrison, 113212530, Sylvania, St. Joseph, MO, 64501
+1113432912, John, Morgeson, 314213777, West 3rd, Wathena, KS, 54910
+-2137595549, Gary, Gilkerson, 234274322, South Highly, St. Joseph, MO, 64503
+-28245287, Mary, Francis, 826219321, Jules, St. Joseph, MO, 64503
+-331365768, Carolyn, Johnson, 927281623, Mocking Bird, St. Joseph, MO, 64502
+-1915126861, Larry, Waite, 393731845, Senior Dr., St. Joseph, MO, 64503
+1957023051, Marilyn, Macklin, 126951584, Lovers Lane, St. Joseph, MO, 64502
+-1106716999, Lana, McGlynn, 828235791, Stonecrest, St. Joseph, MO, 64501
+1281031528, John, Munzer, 927261987, N. Mulbury, St. Joseph, MO, 64502
+-1950240104, Mary, White, 143299783, Kioa, Ellwood, KS, 56708
+876399347, Jerry, Gronius, 723419193, Martha Lane, Gower, MO, 63301
+-1209941616, Martin, Williams, 527216921, Lovers Lane, St. Joseph, MO, 64502
+-1470002102, Broderick, Jones, 277271419, Park Lane, St. Joseph, MO, 64501
