@@ -284,7 +284,7 @@ public class BankingApplication extends Application {
         customerBox.setFitToWidth(true);
         customerBox.setPrefWidth(600);
         customerBox.setPrefHeight(200);
-        Text signUp = new Text("Create New Account:");
+        Text signUp = new Text("Create New Customer:");
         signUp.setFont(Font.font(null, FontWeight.BOLD, FontPosture.REGULAR, 25));
         signUp.setTextAlignment(TextAlignment.CENTER);
         signUp.setFill(Color.RED);
