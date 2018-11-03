@@ -273,12 +273,11 @@ public class Entity
   {
     boolean success = false;
 
-    String ssn=this.getSSN();
-    //long id = this.getID();
+    long id = this.getID();
 
     //check if entity already exists in <entity>.txt
-    //Entity entityToAdd = this.query().getByID(id).getFirst();
-    Entity entityToAdd = this.query().getBySSN(ssn).getFirst();
+    Entity entityToAdd = this.query().getByID(id).getFirst();
+
     //not a duplicate in  db
     if(entityToAdd == null)
     {
