@@ -1,6 +1,13 @@
 package database.Account;
 
+import database.Customer.Customer;
+import database.Customer.CustomerQuery;
 import database.Entity;
+import database.EntityQuery;
+import database.FieldNameTypeAndValue;
+
+import java.nio.file.NoSuchFileException;
+import java.util.ArrayList;
 
 public class AccountEntity extends Entity
 {
@@ -61,6 +68,67 @@ public class AccountEntity extends Entity
         this.DATE_NEXT_PAYMENT_DUE = DATE_NEXT_PAYMENT_DUE;
 
     }//end of parsing AccountEntity constructor
+
+
+    //takes an arraylist of each stringified (delimited) entity and casts each to an Account
+    public static ArrayList<AccountEntity> parse(ArrayList<String> preparsedRecords) throws NoSuchFileException,NoSuchFieldException,InstantiationException,IllegalAccessException
+    {
+        //returned list of accounts
+        ArrayList<AccountEntity> accountsFromFile = new ArrayList<>();
+
+        ArrayList<String> preparsedFields = new ArrayList<String>();
+        //fields after being parsed
+        ArrayList<Object> parsedFields = new ArrayList<Object>();
+
+        for(String account : preparsedRecords)
+        {
+
+            for(String field : account.split(new AccountEntity().getDelimiter()))
+            {
+                preparsedFields.add(field);
+            }
+
+            //because same order is maintained between
+            //fields of AccountEntity class, and text file
+            int i = 0;
+            //cast each field to its corresponding type
+            for(FieldNameTypeAndValue cfield : new AccountEntity().getMemberFields())
+            {
+                if(cfield.getType().equals("long"))
+                {
+                    parsedFields.add(Long.parseLong(preparsedFields.get(i)));
+                }
+                else if(cfield.getType().equals("int"))
+                {
+                    parsedFields.add(Integer.parseInt(preparsedFields.get(i)));
+                }
+                else{  parsedFields.add(preparsedFields.get(i)); }//its a String
+                i += 1;
+            }//end for loop
+
+
+            AccountEntity parsedAccount = new AccountEntity((long)parsedFields.get(0), //ID
+                                                            (String)parsedFields.get(1),//SSN
+                                                            (double)parsedFields.get(2),//BALANCE
+                                                            (String)parsedFields.get(3),//TYPE
+                                                            (String)parsedFields.get(4),//SUBTYPE
+                                                            (String)parsedFields.get(5),//OVERDRAFT_PROTECT
+                                                            (long)parsedFields.get(6),//OVERDRAFT_ACCOUNT_ID
+                                                            (String)parsedFields.get(7),//DATE_CREATED
+                                                            (double)parsedFields.get(8),//INTEREST_RATE
+                                                            (double)parsedFields.get(9),//MINIMUM_PAYMENT
+                                                            (String)parsedFields.get(10));//DATE_NEXT_PAYMENT_DUE
+
+            accountsFromFile.add(parsedAccount);
+
+            //clear for next line input
+            parsedFields.clear();
+            preparsedFields.clear();
+        }//end of for
+
+
+        return accountsFromFile;
+    }//end of parse()
 
 
     //these won't change, and we don't want them getting returned with other fields
