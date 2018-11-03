@@ -98,6 +98,10 @@ public class AccountEntity extends Entity
                 {
                     parsedFields.add(Long.parseLong(preparsedFields.get(i)));
                 }
+                else if(cfield.getType().equals("double"))
+                {
+                    parsedFields.add(Double.parseDouble(preparsedFields.get(i)));
+                }
                 else if(cfield.getType().equals("int"))
                 {
                     parsedFields.add(Integer.parseInt(preparsedFields.get(i)));
