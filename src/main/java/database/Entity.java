@@ -111,18 +111,13 @@ public class Entity
     //add in values to FieldNameTypeAndValue
     for(FieldNameTypeAndValue field : fields)
     {
-       //loop through this classes methods to find getter for this field
-       for(Method method : this.getClass().getDeclaredMethods())
-       { 
-         //split on space and grab the 3rd element (method name)
-         String methodHead = method.toString().split(" ")[2];
-         if(methodHead.contains("get") && methodHead.contains(field.getName()))
-         {
-           try{
-             field.setValue(method.invoke(this));
-           }catch(InvocationTargetException | IllegalAccessException e){ e.printStackTrace(); }
-         }//end of if
-       }//end of for
+      try
+      {
+        //get the get method for this field
+        Method getter = this.getClass().getDeclaredMethod("get" + field.getName());
+        //set value by invoking getter for this field
+        field.setValue(getter.invoke(this));
+      }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e){ e.printStackTrace(); }
          
      }//end of for
 
