@@ -131,6 +131,16 @@ public class AccountEntity extends Entity
     }//end of parse()
 
 
+
+    /*
+     *  AccountEntity inherits query() from Entity.
+     * Needs implementation to call this instead of Entity.query().
+     */
+    public EntityQuery query()
+    {
+        return new AccountQuery();
+    }//end of query
+
     //these won't change, and we don't want them getting returned with other fields
     //from calls to getFields()
     public String getTextFileName(){ return "./db/Account/Account.txt"; }
