@@ -12,7 +12,7 @@ import database.Entity;
 
 
 /*
- *   CustomerQuery  
+ *   CustomerQuery
  *         Supports following calls:
  *
  *     getAll()
@@ -20,13 +20,13 @@ import database.Entity;
  *     getBySSN(int)
  *     getByUsername(String)
  *
- *     calls may be chained 
- *           but must be terminated by: 
- *                        
+ *     calls may be chained
+ *           but must be terminated by:
+ *
  *                 execute() (returns List<Customer>)
- *                    or 
+ *                    or
  *                 getFirst() (returns first Customer or null)
- *                                   
+ *
  */
 public class CustomerQuery extends EntityQuery
 {
@@ -34,7 +34,7 @@ public class CustomerQuery extends EntityQuery
   private List<Customer> initialSet;
 
   //intermediate resultSet (for chaining)
-  private List<Customer> tempSet;  
+  private List<Customer> tempSet;
 
   //final returned results
   private List<Customer> resultSet;
@@ -57,7 +57,7 @@ public class CustomerQuery extends EntityQuery
     }catch(NoSuchFieldException | NoSuchFileException | InstantiationException | IllegalAccessException e){ e.printStackTrace(); }
   }
 
-  // Use as chain terminator 
+  // Use as chain terminator
   // instead of execute() if only
   // expecting one result.
   public Customer getFirst()
@@ -71,7 +71,7 @@ public class CustomerQuery extends EntityQuery
     }
     return singleResult;
   }
-  
+
   // Use as chain terminator.
   // instead of getFirst if
   // expecting more than one result.
@@ -184,5 +184,24 @@ public class CustomerQuery extends EntityQuery
     }
     return this;
   }
+  //filter on Username
+//  public CustomerQuery getByUsername(String username)
+//  {
+//    if(firstCallOccurred)
+//    {
+//      tempSet = resultSet.stream().filter(c -> c.getUSERNAME().equals(username))
+//                         .collect(Collectors.toList());
+//      resultSet = tempSet;
+//    }
+//    else
+//    {
+//      //filter on getLastName() matching lastName
+//      resultSet = initialSet.stream().filter(c -> c.getUSERNAME().equals(username))
+//                          .collect(Collectors.toList());
+//      firstCallOccurred = true;
+//    }
+//
+//    return this;
+//  }//end of getByUsername()
 
 }//end of class CustomerQuery

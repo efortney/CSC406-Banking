@@ -25,9 +25,9 @@ import database.Entity;
  *               Order of fields per line in Customer.txt
  *                                     and
  *               Field names and getters. (String FNAME :: getFNAME())
- *                              
- *                                MUST MATCH. 
- * 
+ *
+ *                                MUST MATCH.
+ *
  * ================ FUNCTONS ================
  *
  *  parse(ArrayList<String> preparsedRecords) : ArrayList<Customer> customers
@@ -79,61 +79,61 @@ public class Customer extends Entity
     this.CITY = CITY;
     this.STATE = STATE;
     this.ZIP = ZIP;
-    
+
   }//end of parsing Customer constructor
 
-      
+
   //takes an arraylist of each stringified (delimited) entity and casts each to a Customer
   public static ArrayList<Customer> parse(ArrayList<String> preparsedRecords) throws NoSuchFileException,NoSuchFieldException,InstantiationException,IllegalAccessException
   {
     //returned list of customers
-    ArrayList<Customer> customersFromFile = new ArrayList<Customer>(); 
+    ArrayList<Customer> customersFromFile = new ArrayList<Customer>();
 
     ArrayList<String> preparsedFields = new ArrayList<String>();
     //fields after being parsed
     ArrayList<Object> parsedFields = new ArrayList<Object>();
 
-      for(String customer : preparsedRecords)
-      {  
+    for(String customer : preparsedRecords)
+    {
 
-        for(String field : customer.split(new Customer().getDelimiter()))
+      for(String field : customer.split(new Customer().getDelimiter()))
+      {
+        preparsedFields.add((String)field);
+      }
+
+      //because same order is maintained between
+      //fields of Customer class, and text file
+      int i = 0;
+      //cast each field to its corresponding type
+      for(FieldNameTypeAndValue cfield : new Customer().getMemberFields())
+      {
+        if(cfield.getType().equals("long"))
         {
-          preparsedFields.add((String)field);
+          parsedFields.add(Long.parseLong(preparsedFields.get(i)));
         }
-        
-        //because same order is maintained between
-          //fields of Customer class, and text file  
-          int i = 0; 
-          //cast each field to its corresponding type
-          for(FieldNameTypeAndValue cfield : new Customer().getMemberFields())
-          {
-            if(cfield.getType().equals("long"))
-            {
-              parsedFields.add(Long.parseLong(preparsedFields.get(i)));
-            }
-            else if(cfield.getType().equals("int"))
-            {
-              parsedFields.add(Integer.parseInt(preparsedFields.get(i)));
-            }
-            else{  parsedFields.add(preparsedFields.get(i)); }//its a String
-            i += 1;
-          }//end for loop  
+        else if(cfield.getType().equals("int"))
+        {
+          parsedFields.add(Integer.parseInt(preparsedFields.get(i)));
+        }
+        else{  parsedFields.add(preparsedFields.get(i)); }//its a String
+        i += 1;
+      }//end for loop
 
-          Customer parsedCustomer = new Customer((long)parsedFields.get(0), //ID
-                                               (String)parsedFields.get(1),//FNAME
-                                               (String)parsedFields.get(2),//LNAME
-                                               (String)parsedFields.get(3),//SSN
-                                               (String)parsedFields.get(4),//STREET_ADDRESS
-                                               (String)parsedFields.get(5),//CITY
-                                               (String)parsedFields.get(6),//STATE
-                                               (String)parsedFields.get(7));//ZIP
+      Customer parsedCustomer = new Customer((long)parsedFields.get(0), //ID
+              (String)parsedFields.get(1),//FNAME
+              (String)parsedFields.get(2),//LNAME
+              (String)parsedFields.get(3),//SSN
+              (String)parsedFields.get(4),//STREET_ADDRESS
+              (String)parsedFields.get(5),//CITY
+              (String)parsedFields.get(6),//STATE
+              (String)parsedFields.get(7));//ZIP
 
-          customersFromFile.add(parsedCustomer);
-                          
-          //clear for next line input
-          parsedFields.clear();
-          preparsedFields.clear();
-        }//end of for
+      customersFromFile.add(parsedCustomer);
+
+      //clear for next line input
+      parsedFields.clear();
+      preparsedFields.clear();
+    }//end of for
 
 
     return customersFromFile;
@@ -149,7 +149,7 @@ public class Customer extends Entity
     return new CustomerQuery();
   }//end of query
 
-  
+
   //these won't change, and we don't want them getting returned with other fields
   //from calls to getFields()
   public String getTextFileName(){ return "./db/Customer/Customer.txt"; }

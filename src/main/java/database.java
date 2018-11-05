@@ -92,4 +92,18 @@ public class database {
     public void setHasBackUpAcc(boolean hasBackUpAcc) {
         this.hasBackUpAcc = hasBackUpAcc;
     }
+
+    @Override
+    public String toString() {
+        return "database{" +
+                "SSN='" + SSN + '\'' +
+                ", fname='" + fname + '\'' +
+                ", lname='" + lname + '\'' +
+                ", address='" + address + '\'' +
+                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
+                ", zipcode='" + zipcode + '\'' +
+                ", hasBackUpAcc=" + hasBackUpAcc +
+                '}';
+    }
 }
