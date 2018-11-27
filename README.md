@@ -25,6 +25,8 @@ This will take you to a new PR. Fill out the template with the information, and 
 
 [SSD](https://www.lucidchart.com/invitations/accept/103c2188-c453-4cbf-a609-4075512cdcaa)
 
+[Sequence](https://www.lucidchart.com/invitations/accept/6c65d66f-8b59-4eea-8e01-bf15b20a0381)
+
 ## References 
 
 
